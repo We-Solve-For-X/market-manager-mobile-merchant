@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, FlatList, Text } from 'react-native'
-import { Title } from '@shoutem/ui'
+import { Title, TextInput } from '@shoutem/ui'
+import SearchBar from '../components/common/SearchBar'
 //import axios from 'axios'
 //consts & comps
 import MerchantCard from '../components/merchants/MerchantCard'
@@ -12,7 +13,8 @@ export default class Merchants extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true
+      loading: true,
+      searchInput: ''
     }
     //this.signal = axios.CancelToken.source()
   }
@@ -27,35 +29,37 @@ export default class Merchants extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { } = this.state
+    const {searchInput } = this.state
     return (
       <View style={styles.container}>
-      <ScrollView >
-        <Title>Merchant Requests</Title>
-        <FlatList
-          data={[{a: 'Market 1'}, {a : 'Market 2'}]}
-          //keyExtractor={(item) => item.spotSummary.spotId}
-          renderItem={({item}) => this._renderNewMerch(item.a)}
-          scrollEnabled={false}
-          // isLoading={false}
-          //ListEmptyComponent={<FlatlistError message={(isKite == 0 && surfAlertsEnabled) ? "No Surfable Spots Found" : (isKite == 1 && kiteAlertsEnabled) ? "No Surfable Spots Found" : "Activate Alerts"} noRetry={false}/>}
-        />
+        <ScrollView >
 
-      <Title>All Merchant</Title>
-        <FlatList
-          data={[{a: 'Market 1'}, {a : 'Market 2'}]}
-          //keyExtractor={(item) => item.spotSummary.spotId}
-          renderItem={({item}) => this._renderMerchant(item.a)}
-          scrollEnabled={false}
-          // isLoading={false}
-          //ListEmptyComponent={<FlatlistError message={(isKite == 0 && surfAlertsEnabled) ? "No Surfable Spots Found" : (isKite == 1 && kiteAlertsEnabled) ? "No Surfable Spots Found" : "Activate Alerts"} noRetry={false}/>}
-        />
+          <Title>Merchant Requests</Title>
+          <FlatList
+            data={[{a: 'Market 1'}, {a : 'Market 2'}]}
+            //keyExtractor={(item) => item.spotSummary.spotId}
+            renderItem={({item}) => this._renderNewMerch(item.a)}
+            scrollEnabled={false}
+            // isLoading={false}
+            //ListEmptyComponent={<FlatlistError message={(isKite == 0 && surfAlertsEnabled) ? "No Surfable Spots Found" : (isKite == 1 && kiteAlertsEnabled) ? "No Surfable Spots Found" : "Activate Alerts"} noRetry={false}/>}
+          />
 
+          <Title>All Merchant</Title>
+          <SearchBar
+            placeholder={'Find a Merchant'} 
+            onChangeText={(searchInput) => this.setState({searchInput})}
+            value={searchInput}
+          />
 
-        {/* <Text>Merchants</Text>
-        <Button title="View Merchant" onPress={() => this.props.navigation.navigate('MerchantsDetails')} />
-      */}
-      </ScrollView>
+          <FlatList
+            data={[{a: 'Market 1'}, {a : 'Market 2'}]}
+            //keyExtractor={(item) => item.spotSummary.spotId}
+            renderItem={({item}) => this._renderMerchant(item.a)}
+            scrollEnabled={false}
+            // isLoading={false}
+            //ListEmptyComponent={<FlatlistError message={(isKite == 0 && surfAlertsEnabled) ? "No Surfable Spots Found" : (isKite == 1 && kiteAlertsEnabled) ? "No Surfable Spots Found" : "Activate Alerts"} noRetry={false}/>}
+          />
+        </ScrollView>
       </View>
     )
   }
