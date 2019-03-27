@@ -43,7 +43,7 @@ export default class Communication extends React.Component {
         <ScrollView>
 
           <Button style={{marginVertical: 18, marginHorizontal: 45, ...styleConsts.buttonBorder}} onPress={() => this.props.navigation.navigate('CommunicationNew')}>
-            <Icon name="add-event" />
+            <Icon name="email" />
             <Text>NEW MESSAGE</Text>
           </Button>
 

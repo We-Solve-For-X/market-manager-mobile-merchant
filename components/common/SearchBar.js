@@ -10,12 +10,14 @@ export default class SearchBar extends React.PureComponent {
   render() {
     const { placeholder, onChangeText, value } = this.props
     return (
-        <TextInput
-        placeholder={placeholder}
-        style={styles.container}
-        onChangeText={onChangeText}
-        maxLength={28}
-        value={value}
+    <TextInput
+      placeholder={placeholder}
+      style={styles.container}
+      onChangeText={onChangeText}
+      maxLength={28}
+      value={value}
+      selectionColor={colors.pWhite}
+      placeholderTextColor={colors.pWhite}
     />
     )
   }
@@ -23,8 +25,16 @@ export default class SearchBar extends React.PureComponent {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.secondary, 
+        backgroundColor: colors.pGrey, 
         borderRadius: 30, 
-        margin: 10, height: 15
+        margin: 10, 
+        borderColor: colors.primary,
+        borderWidth: 0.5
+        //height: 15,
+    },
+    textInput: {
+      backgroundColor: 'transparent', 
+      height: 42, 
+      paddingVertical: 0
     },
 })

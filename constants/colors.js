@@ -12,6 +12,9 @@ export default {
 
   cardBg: '#444444',
 
+  pRed: '#C70039',
+  pGreen: '#95BB52',
+
 
 
 
