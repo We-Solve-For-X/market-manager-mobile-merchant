@@ -11,6 +11,18 @@ export default styleConsts = StyleSheet.create({
         shadowOffset: {width: 1, height: 1}, 
         shadowRadius: 5, 
         shadowOpacity: 0.3
-    } 
+    },
+    textOne: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    textTwo: {
+        fontSize: 17,
+        fontWeight: "normal",
+    },
+    textThree: {
+        fontSize: 14,
+        fontWeight: "normal",
+    }
   })
   
