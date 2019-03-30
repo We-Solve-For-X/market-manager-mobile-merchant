@@ -21,7 +21,7 @@ export default class MarketCard extends React.PureComponent {
     return (
       <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MarketDetails')} >
       
-      <View style={{borderRadius: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: colors.primary, padding: 8}}>
+      <View style={{borderRadius: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: colors.secondary, padding: 8}}>
         <View >
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
             <Title style={styles.date} numberOfLines={1}>{moment(marketStart).format("dddd Do MMM YYYY")}</Title>
@@ -40,7 +40,7 @@ export default class MarketCard extends React.PureComponent {
       
         
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 3}}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginTop: 4}}>
           <Text style={styles.desc} numberOfLines={1}>{'Attendances: 163'}</Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
@@ -51,7 +51,7 @@ export default class MarketCard extends React.PureComponent {
           <Text style={styles.desc} numberOfLines={1}>{'Awaitng: '}</Text>
           <Text style={styles.paidA} numberOfLines={1}>{'20'}</Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4}}>
           <Text style={styles.desc} numberOfLines={1}>{'Outstanding: '}</Text>
           <Text style={styles.paidN} numberOfLines={1}>{'22'}</Text>
         </View>
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
     container:{
       width: '100%',
       //height: 100,
-      backgroundColor: colors.cardBg,
+      backgroundColor: colors.primary,
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems: 'center',
       marginBottom: 10,
       // paddingHorizontal: 8,
       // paddingVertical: 5,
-      borderRadius: 3
+      borderRadius: 4
     },
     date: {
       ...styleConsts.textOne,

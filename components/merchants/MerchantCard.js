@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Switch } from 'react-native'
 import {  Text, Icon, Button } from '@shoutem/ui'
-
+import styleConsts from '../../constants/styleConsts'
 import colors from '../../constants/colors';
 
 export default class MerchentCard extends React.PureComponent {
@@ -26,9 +26,8 @@ export default class MerchentCard extends React.PureComponent {
         <TouchableOpacity style={styles.topBox} onPress={() => this.setState({isExpanded: !isExpanded})}>
           <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start'}} >
             <Text style={styles.textMain}>{standName}</Text>
-            <Text style={styles.textSub}>{name} {surname}</Text>
             <Text style={styles.textSub}>{isActive ? 'ACTIVE' : 'INACTIVE'}</Text>
-            
+            <Text style={styles.textSubSub}>{name} {surname}</Text>
           </View>
           <TouchableOpacity style={{marginHorizontal: 7, flexDirection: 'column', justifyContent: 'center'}} onPress={() => navigation.navigate('MerchantsDetails')}>
             <Icon name="right-arrow" style={{color: colors.pWhite}}/>
@@ -101,18 +100,21 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center',
       //marginBottom: 8,
-      paddingHorizontal: 4,
+      padding: 7,
       //borderRadius: 3
     },
     textMain: {
-      fontSize: 18,
-      fontWeight: 'bold',
+      ...styleConsts.textOne,
       color: colors.pWhite,
       paddingVertical: 3
     },
     textSub: {
-      fontSize: 13,
-      fontWeight: 'bold',
+      ...styleConsts.textTwo,
+      color: colors.pWhite,
+      paddingVertical: 2
+    },
+    textSubSub: {
+      ...styleConsts.textThree,
       color: colors.pWhite,
       paddingVertical: 2
     },

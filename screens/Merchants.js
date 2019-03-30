@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, FlatList, Text } from 'react-native'
-import { Title, TextInput } from '@shoutem/ui'
+import { Heading, Subtitle } from '@shoutem/ui'
 import SearchBar from '../components/common/SearchBar'
 //import axios from 'axios'
 //consts & comps
@@ -36,9 +36,13 @@ export default class Merchants extends React.Component {
     const {searchInput, merchantsAwaiting, merchantsApprovedDisp } = this.state
     return (
       <View style={styles.container}>
-        <ScrollView >
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-          <Title style={{marginVertical: 10}}>Merchant Requests</Title>
+          <View style={{ marginVertical: 8, padding: 8, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
+            <Heading>Merchant Requests</Heading>
+            <Subtitle>You have 2 pending merchant requests</Subtitle>
+          </View>
+
           <FlatList
             data={merchantsAwaiting}
             //keyExtractor={(item) => item.spotSummary.spotId}
@@ -48,7 +52,10 @@ export default class Merchants extends React.Component {
             //ListEmptyComponent={<FlatlistError message={(isKite == 0 && surfAlertsEnabled) ? "No Surfable Spots Found" : (isKite == 1 && kiteAlertsEnabled) ? "No Surfable Spots Found" : "Activate Alerts"} noRetry={false}/>}
           />
 
-          <Title>All Merchant</Title>
+          <View style={{ marginVertical: 8, padding: 8, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
+            <Heading>All Merchant</Heading>
+            <Subtitle>You have 4 registered merchants</Subtitle>
+          </View>
           <SearchBar
             placeholder={'Find a Merchant'} 
             onChangeText={ (searchInput) => this._applySearch(searchInput)}
@@ -126,7 +133,14 @@ export default class Merchants extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
     backgroundColor: colors.pViewBg,
+    //padding: 10
+  },
+  scrollContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    //justifyContent: 'flex-start',
+    //alignItems: 'center',
+    padding: 10
   },
 });
