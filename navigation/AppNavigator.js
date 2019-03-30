@@ -5,8 +5,8 @@ import MainTabNavigator from './MainTabNavigator';
 import SignIn from '../screens/SignIn'
 
 export default createStackNavigator({
-  Main: MainTabNavigator,
-  SignIn: SignIn,
+SignIn: SignIn,  Main: MainTabNavigator,
+  
 },
 {
   headerMode: 'none',
