@@ -5,8 +5,9 @@ export async function packageResponse(nwRequest) {
 
     try{
         const input = await nwRequest
-        const { status } = input.request
-        packagedResp = processResponseCode(status, input)
+        console.log('input', input)
+        const { code } = input.data
+        packagedResp = processResponseCode(code, input)
     } catch (err) { //Catch request failure errors
         let connection = ''
         try{
@@ -46,12 +47,24 @@ export async function packageResponse(nwRequest) {
     } else if (status == 500) { //Internal Server Error
         return packagedResp = {
             code: 500,
-            data: "There was an issue with our servers - try again in a minute, otherwise we'll sort it out"
+            data: "There was an issue with our servers - try again in a minute, otherwise we'll have it to sort it out"
         }
-    } else if (status == 400 || status == 404) { //Bad Request || Not Found
+    } else if (status == 401) { //Unauthorized
+        const { message } = input.data.body
+        return packagedResp = {
+            code: status,
+            data: message
+        }
+    } else if (status == 400) { //Bad Request |
         return packagedResp = {
             code: status,
             data: "Something went wrong on our side while getting the data you need - if the problem persists, please notify our support!"
+        }
+    } else if (status == 404) { //Not Found
+        const { message } = input.data.body
+        return packagedResp = {
+            code: status,
+            data: message
         }
     } else if (status == 407 || status == 511) { //Proxy Authentication Required || Network Authentication Required
         return packagedResp = {

@@ -96,8 +96,6 @@ export default class Home extends React.Component {
           <View style={styles.divider}/>
 
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-
-          
           <Button 
             style={{marginVertical: 10, marginHorizontal: 15, ...styleConsts.buttonBorder, width: 115}} 
             onPress={() => this.setState({updating: true})}>
@@ -110,6 +108,33 @@ export default class Home extends React.Component {
           </Button>   
           </View> 
         </View>
+
+        <View style={{ margin: 10, padding: 5, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
+          <Heading>Credentials</Heading>
+          <Subtitle>Edit your sign-in credentials:</Subtitle>
+
+          <LineView title={'Username'} value={name} onChange={(name) => this.setState({name})}/>
+          <View style={styles.divider}/>
+          <LineInput title={'Current Password'} value={'...'} onChange={(surname) => this.setState({surname})}/>
+          <View style={styles.divider}/>
+          <LineInput title={'New Password'} value={'...'} onChange={(email) => this.setState({email})}/>
+          <View style={styles.divider}/>
+
+          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+          <Button 
+            style={{marginVertical: 10, marginHorizontal: 15, ...styleConsts.buttonBorder, width: 115}} 
+            onPress={() => this.setState({updating: true})}>
+            <Text>UPDATE</Text>
+            {updating ? 
+            <ActivityIndicator size="small" color={colors.pBlack} />
+            : 
+            <AntDesign name="clouduploado" size={22} />
+            }
+          </Button>   
+          </View> 
+        </View>
+
+
         </ScrollView>
       </View>
     )

@@ -1,12 +1,24 @@
 import React from 'react';
-import { createSwitchNavigator } from 'react-navigation';
-
+import { Platform, Easing, Animated, Text } from 'react-native'
+import { createStackNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import SignIn from '../screens/SignIn'
 
-
-export default createSwitchNavigator({
+export default createStackNavigator({
   Main: MainTabNavigator,
   SignIn: SignIn,
-
+},
+{
+  headerMode: 'none',
+  mode: 'card',
+  navigationOptions: {
+    gesturesEnabled: false,
+  },
+  transitionConfig: () => ({
+    transitionSpec: {
+      duration: 600,
+      easing: Easing.out(Easing.poly(4)),
+      timing: Animated.timing,
+    },
+  }),
 })

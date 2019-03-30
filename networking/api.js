@@ -18,8 +18,8 @@ export function get(path, token) {
 }
 
 export function post(path, body, token) {
-  console.log('[POST] ', `${BASE_URL}/${path}`)
-  console.log('[POST] ', body)
+  // console.log('[POST] ', `${BASE_URL}/${path}`)
+  // console.log('[POST] ', body)
   return axios.post(`${BASE_URL}/${path}`, body, {
     method: 'POST',
     headers: {
