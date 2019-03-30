@@ -49,13 +49,13 @@ export default class Home extends React.Component {
 
         <View style={{ margin: 10, padding: 5, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
           <Heading>Payments</Heading>
-          <Subtitle>You have 23 outstanding payments, from 18 merchants.</Subtitle>
+          <Subtitle>There are 23 outstanding payments, from 18 merchants.</Subtitle>
         </View>
 
         <View style={{ margin: 10, padding: 5, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
           <Heading>Merchants</Heading>
-          <Subtitle>There are 132 merchants on your system</Subtitle>
-          <Subtitle>And 3 merchant-requests</Subtitle>
+          <Subtitle>You have 132 registered merchants on the system</Subtitle>
+          <Subtitle>with 3 new merchant-requests</Subtitle>
         </View>
 
         <View style={{ margin: 10, padding: 5, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>

@@ -9,7 +9,7 @@ import colors from '../../constants/colors'
 export default ButtonFloat = ({navigation}) =>{
     return(
         <TouchableOpacity style={styles.fab} onPress={() => navigation.goBack()}>
-            <Icon name={"back"}  />
+            <Icon name={"back"} style={{color: colors.pWhite}} />
             {/* <Text>Go Back</Text> */}
         </TouchableOpacity>
     )
@@ -17,14 +17,17 @@ export default ButtonFloat = ({navigation}) =>{
 
 const styles = StyleSheet.create({
     fab:{
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         position: 'absolute',
         height: 50,
         width: 50,
         borderRadius: 25,
-        bottom: 60,
+        bottom: 40,
         right: 20,
-        backgroundColor: colors.accent,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: colors.bg
+        backgroundColor: colors.pBlack,
+        //borderWidth: StyleSheet.hairlineWidth,
+
     }
 })
