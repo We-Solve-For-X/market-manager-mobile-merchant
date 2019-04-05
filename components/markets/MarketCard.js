@@ -19,7 +19,7 @@ export default class MarketCard extends React.PureComponent {
     const { id, unCode, hostId, name, description, takeNote, setupStart, marketStart, marketEnd, standPrice } = market
 
     return (
-      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MarketDetails')} >
+      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MarketDetails', {id: id})} >
       
       <View style={{borderRadius: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: colors.secondary, padding: 8}}>
         <View >

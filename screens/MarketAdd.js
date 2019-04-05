@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, FlatList, ScrollView } from 'react-native'
+import { View, StyleSheet, FlatList, ScrollView, ActivityIndicator } from 'react-native'
 import ButtonFloat from '../components/common/ButtonFloat'
 import { Text, Button, Title, Icon, TextInput } from '@shoutem/ui'
 import DatePicker from 'react-native-datepicker'
@@ -7,6 +7,7 @@ import SearchBar from '../components/common/SearchBar'
 import AttendanceCard from '../components/markets/AttendanceCard'
 import { AntDesign } from '@expo/vector-icons'
 import axios from 'axios'
+import moment from 'moment'
 //consts & comps
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
@@ -19,6 +20,7 @@ export default class MarketAdd extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      loading: false,
       merchants: [],
       merchantsDisp: [],
       verifySubmit: false,
@@ -46,7 +48,7 @@ export default class MarketAdd extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { verifySubmit, name, description, takeNote, setupStart, marketStart, marketEnd, searchInput, merchantsDisp } = this.state
+    const { verifySubmit, name, description, takeNote, setupStart, marketStart, marketEnd, searchInput, merchantsDisp, loading } = this.state
     return (
       <View style={styles.container}>
       <ScrollView>
@@ -63,11 +65,11 @@ export default class MarketAdd extends React.Component {
 
           { verifySubmit ? 
           (<View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => this._createMarket()}>
-              <Text>CONFIRM</Text>
+            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => loading ? null : this._createMarket()}>
+              {!loading ? <Text>CONFIRM</Text> : <ActivityIndicator/>}
               <AntDesign name="check" size={22} />
             </Button>
-            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => this.setState({verifySubmit: false})}>
+            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => loading ? null : this.setState({verifySubmit: false})}>
               <Text>CANCELL</Text>
               <AntDesign name="close" size={22} />
             </Button>
@@ -273,9 +275,9 @@ export default class MarketAdd extends React.Component {
       description: description,
       takeNote: takeNote,
       merchantIds: merchsIn,
-      setupStart: setupStart,
-      marketStart: marketStart,
-      marketEnd: marketEnd
+      setupStart: moment(setupStart, "MMM Do YYYY, h:mm a"),
+      marketStart: moment(marketStart, "MMM Do YYYY, h:mm a"),
+      marketEnd: moment(marketEnd, "MMM Do YYYY, h:mm a")
     }
     console.log('createBody', createBody)
     const response = await createMarket(createBody, this.signal.token)

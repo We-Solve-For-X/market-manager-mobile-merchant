@@ -7,25 +7,29 @@ import SearchBar from '../components/common/SearchBar'
 import AttendanceCard from '../components/markets/AttendanceCard'
 import AttendanceAddCard from '../components/markets/AttendanceAddCard'
 import { Feather, MaterialCommunityIcons, MaterialIcons, AntDesign } from '@expo/vector-icons';
-//import axios from 'axios'
+import axios from 'axios'
 //consts & comps
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
+import { HostID } from "../config/env"
 //API
-import { merchantsApproved } from "../networking/stubs";
+import { view } from "../networking/nm_sfx_markets"
 
 export default class MarketDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      merchants: [],
-      merchantsDisp: [],
+      market: [],
+      attendances: [],
+
       newMerchants: [],
       confirmDelete: false,
       addModal: false,
       searchInput: ''
     }
+
+    this.signal = axios.CancelToken.source()
   }
   
 
@@ -39,7 +43,8 @@ export default class MarketDetails extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { confirmDelete, name, description, takeNote, setupStart, marketStart, marketEnd, searchInput, merchantsDisp, addModal, newMerchants } = this.state
+    const { confirmDelete, market, searchInput, addModal, newMerchants, attendances } = this.state
+    const { unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm  } = market
 
     return (
       <View style={styles.container}>
@@ -116,7 +121,7 @@ export default class MarketDetails extends React.Component {
               //onChangeText={(name) => this.setState({name})}
               style={styles.textInput}
               maxLength={28}
-              value={'name'}
+              value={name}
               editable={false}
             />
           </View>
@@ -132,7 +137,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'description of the market'}
+              value={description}
               editable={false}
             />
           </View>
@@ -147,7 +152,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'163'}
+              value={nAttendances}
               editable={false}
             />
           </View>
@@ -162,7 +167,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'140 (23)'}
+              value={`${nInvPayed} Payed, ${nInvOuts} Outstanding, ${nInvSubm} Awaiting Review `}
               editable={false}
             />
           </View>
@@ -177,7 +182,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'12 April 2019 05:00'}
+              value={setupStart}
               editable={false}
             />
           </View>
@@ -248,7 +253,7 @@ export default class MarketDetails extends React.Component {
           />
 
           <FlatList
-            data={merchantsDisp}
+            data={attendances}
             //keyExtractor={(item) => item.spotSummary.spotId}
             renderItem={({item}) => this._renderAttendance(item)}
             scrollEnabled={false}
@@ -292,21 +297,24 @@ export default class MarketDetails extends React.Component {
 
   _fetchData = async () => {
     console.log("fetching data")
-    this.setState({merchants: merchantsApproved, merchantsDisp: merchantsApproved, newMerchants: merchantsApproved})
-    // this.setState({ loading: true })
-    // const response = await fetchLocationDetails(spotId, this.signal.token)
-    // if (response.code == 200) {
-    //   this.setState({
-    //     surfSpot: response.data.spot,
-    //     meta: response.data.meta,
-    //     loading: false
-    //   }) 
-    // } else {
-    //   this.setState({
-    //     errorMessage: response.data,
-    //     loading: false
-    //   })
-    // }
+    this.setState({ loading: true })
+    const idIn = this.props.navigation.state.params.id
+    console.log('id', idIn)
+    const response = await view(idIn, this.signal.token)
+    console.log('data', response)
+    if (response.code == 200) {
+      this.setState({
+        market: response.data.market,
+        attendances: response.data.attendances,
+        id: idIn,
+        loading: false
+      }) 
+    } else {
+      this.setState({
+        errorMessage: response.data,
+        loading: false
+      })
+    }
   }
 
   static navigationOptions = {

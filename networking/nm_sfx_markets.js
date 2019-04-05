@@ -55,19 +55,47 @@ export async function loadCreate(hostId = '', token) {
     return packageResponse(packDataPromise)
 }
 
-// case class Market (unCode: String,
-//                     hostId: String,
-//                     name: String,
-//                     description: String,
-//                     takeNote: String,
-//                     setupStart: OffsetDateTime,
-//                     marketStart: OffsetDateTime,
-//                     marketEnd: OffsetDateTime,
-//                     standPrices: List[PriceBracket],
-//                     createdAt: Option[OffsetDateTime] = Some(OffsetDateTime.now()),
-//                     updatedAt: Option[OffsetDateTime] = Some(OffsetDateTime.now()),
-//                     deleted: Boolean = false,
-//                     id: Option[String] = Some(UUID.randomUUID().toString)) 
+// case class View(market: Market.Summary, 
+//                 attendances: List[Attendance.MarketSummary])
+
+// Summary(unCode: String,
+//         hostId: String,
+//         name: String,
+//         description: String,
+//         takeNote: String,
+//         setupStart: OffsetDateTime,
+//         marketStart: OffsetDateTime,
+//         marketEnd: OffsetDateTime,
+//         standPrices: List[PriceBracket],
+//         nAttendances: Int,
+//         nInvPayed: Int,
+//         nInvOuts: Int,
+//         nInvSubm: Int)
+// const { unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm: Int  } = market
+
+// Attendance.MarketSummary(standId: String,
+//                          merchant: Merchant.Summary,
+//                          invoice: Invoice.Summary)
+
+
+// Merchant.Summary(id: String,
+//                  isActive: Boolean,
+//                  repName: String,
+//                  repSurname: String,
+//                  name: String,
+//                  description: String,
+//                  standId: Option[String])
+
+// Invoice.Summary(id: Option[String],
+//                 invoiceType: String, // InvoiceType = [ATTENDANCE, ???]
+//                 amount: Float,
+//                 refNum: String,
+//                 status: String, //PaymentStatus = [Outstanding, InReview, Payed]
+//                 payedOn: Option[OffsetDateTime],
+//                 method: Option[String], // = [Card, Cash, EFT]
+//                 comment: Option[String])
+
+
 export async function view(marketId = '', token) {
     const url =  MARKMAN_BASE_URL + `/${MID_URL}/view?marketId=${marketId}`
     const packDataPromise = get(url, token)
