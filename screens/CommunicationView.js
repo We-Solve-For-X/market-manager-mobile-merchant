@@ -28,7 +28,7 @@ export default class CommunicationView extends React.Component {
     const { navigation } = this.props
     const message = navigation.getParam('message', {none: 'none'});
     //const { topic, text, fromName, toName } = this.state
-    const { topic, text, fromName, targetDesc } = message
+    const { topic, text, fromName, description } = message
 
     return (
       <View style={styles.container}>
@@ -51,7 +51,7 @@ export default class CommunicationView extends React.Component {
             </View>
             <TextInput
               style={styles.textInput}
-              defaultValue={targetDesc}
+              defaultValue={description}
               editable={false}
             />
           </View>

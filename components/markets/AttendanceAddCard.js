@@ -3,39 +3,36 @@ import { StyleSheet, View, TouchableOpacity, ActivityIndicator  } from 'react-na
 import {  Text, Icon, Button, TextInput } from '@shoutem/ui'
 import styleConsts from "../../constants/styleConsts";
 import colors from '../../constants/colors';
-import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios'
+import { Ionicons } from '@expo/vector-icons'
+import { HostID } from "../../config/env"
+//API
+import { addMerchant } from "../../networking/nm_sfx_markets"
 
 export default class AttendanceAddCard extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
           isExpanded: false,
-          sending: false
+          adding: false
         }
-        //this.signal = axios.CancelToken.source()
+        this.signal = axios.CancelToken.source()
     }
 
 
   render() {
-    const { navigation, merchant, isCreate } = this.props
-     const { isExpanded, dummyIsActive } = this.state
-    // const { id, hostId, authId, status, isActive, name, surname, email, cell, standName, businessName, standDescription} = merchant
 
-    const { } = this.state
+    const { navigation, attendance } = this.props
+    const { isExpanded, adding } = this.state
+    const { id, standId, merchant, invoice} = attendance
+
     return (
       <View style={styles.container}>
         <View style={styles.topBox} onPress={() => this.setState({isExpanded: !isExpanded})}>
           <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start'}} >
-            <Text style={styles.textMain}>{'standName'}</Text>
-            <Text style={styles.textSub}>{'rep name'} {'surname'}</Text>
+            <Text style={styles.textMain}>{merchant.name}</Text>
+            <Text style={styles.textSub}>{merchant.repName} {merchant.repSurname}</Text>
             <Text style={styles.textSub}>{' 4 - R230 (Payment Bracket)'}</Text>
-            {true ? 
-            null
-            :
-            <View>
-              <Text style={styles.textSub}>{'PENDING (Payment Status)'}</Text>
-              <Text style={styles.textSub}>{'MREP120409 (Payment Ref)'}</Text>
-            </View>}
           </View>
 
           <TouchableOpacity 
@@ -45,13 +42,12 @@ export default class AttendanceAddCard extends React.PureComponent {
             <Icon name="unfriend" style={{color: colors.pWhite, marginHorizontal: 20}}/>
           </TouchableOpacity>
 
-          
         </View>
         {!isExpanded ?
         null:
         (<View style={{width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingVertical: 4, backgroundColor: colors.primary, borderBottomLeftRadius: 3, borderBottomRightRadius: 3}}>
           {/* <View style={styles.divider}/> */}
-          {this._renderExpand(isCreate, dummyIsActive)}
+          {this._renderExpand()}
         </View>)
         }
       </View>
@@ -61,7 +57,7 @@ export default class AttendanceAddCard extends React.PureComponent {
   _renderExpand = () => {
       return(
         <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: '95%'}}>
-            <Button style={{marginVertical: 10, marginHorizontal: 15, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this.setState({sending: true})}>
+            <Button style={{marginVertical: 10, marginHorizontal: 15, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this._addMerchant()}>
               <Text>ADD</Text>
               {this.state.sending ? 
               <ActivityIndicator size="small" color={colors.pBlack} />
@@ -73,9 +69,29 @@ export default class AttendanceAddCard extends React.PureComponent {
       )
   }
 
-  _toggleMerchant = async () => {
-    this.setState({dummyIsActive: !this.state.dummyIsActive})
+  _addMerchant = async () => {
+    let marketId = this.props.marketId
+    let merchantId = this.props.attendance.merchant.id
+    this.setState({ adding: true })
+    console.log(marketId, merchantId)
+    const response = await addMerchant(marketId, merchantId)
+    if (response.code == 200) {
+      //if (true) {
+      this.setState({
+        adding: false
+      }) 
+      this.props.removeNewAttendance(merchantId)
+    } else {
+      this.setState({
+        errorMessage: response.data,
+        adding: false
+      })
+    }
   }
+
+
+
+
 }
 
 const styles = StyleSheet.create({

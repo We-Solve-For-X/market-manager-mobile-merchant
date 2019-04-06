@@ -4,14 +4,14 @@ import ButtonFloat from '../components/common/ButtonFloat'
 import { Text, Button, DropDownMenu, Icon, TextInput } from '@shoutem/ui'
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios'
-//import axios from 'axios'
 //consts & comps
+import { HostID } from "../config/env";
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
 //API
-import { sendMessage, loadSend } from "../networking/nm_sfx_markMan"
-import { sendMessageError, incompleteFields} from "../services/systemAlerts";
+import { sendMessage, loadSend } from "../networking/nm_sfx_communication"
+import { sendMessageError, incompleteFields} from "../services/systemAlerts"
 
 export default class CommunicationNew extends React.Component {
   constructor(props){
@@ -55,6 +55,8 @@ export default class CommunicationNew extends React.Component {
               selectedOption={toSelected ? toSelected : toOptions[0]}
               onOptionSelected={(selected) => this.setState({ toSelected: selected })}
               titleProperty="description"
+              visibleOptions={5}
+              //style={{horizontalContainer: {backgroundColor: 'pink'}}}
             />
           </View>
           <View style={styles.divider}/>
@@ -115,16 +117,19 @@ export default class CommunicationNew extends React.Component {
     )
   }
 
-  _sendMessage = async (topic = '', text = '', fromId = '', fromName = '', toSelected = {targetType: "ERROR", targetId: '', description: ''}) => {
+  _sendMessage = async (topic = '', text = '', fromId = '', fromName = '', toSelected = {recipientType: "ERROR", recipientId: '', description: ''}) => {
     this.setState({sending: true})
-    if(topic == null || text == null || fromId == null || fromName == null || toSelected == null ) {
+    if(topic == null || text == null || fromId == null || fromName == null || toSelected.recipientType == "ERROR" ) {
       incompleteFields()
       this.setState({sending: false})
       return
     }
     
-    let message = {topic: topic, text: text, fromId: fromId, fromName: fromName, target: toSelected.targetType, targetId: toSelected.targetId, targetDesc: toSelected.description}
+    let message = {topic, text, fromId, fromName, recipientType: toSelected.recipientType, recipientId: toSelected.recipientId, description: toSelected.description}
+
+    console.log(message)
     const response = await sendMessage(message, this.signal.token)
+    console.log(response)
     if (response.code == 200) {
       this.setState({sending: false})
       this.props.navigation.goBack()
@@ -137,7 +142,9 @@ export default class CommunicationNew extends React.Component {
 
   _fetchData = async () => {
     this.setState({ loading: true })
-    const response = await loadSend('1234', this.signal.token)
+    //get name & surname
+    //get uadministratorId
+    const response = await loadSend(HostID, this.signal.token)
     if (response.code == 200) {
       this.setState({
         fromId: 'fromId', 

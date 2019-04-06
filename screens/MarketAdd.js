@@ -13,6 +13,7 @@ import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
 import { HostID } from "../config/env"
+import { incompleteFields, systemAlert } from "../services/systemAlerts"
 //API
 import { loadCreate, createMarket } from "../networking/nm_sfx_markets";
 
@@ -23,13 +24,17 @@ export default class MarketAdd extends React.Component {
       loading: false,
       attendances: [],
       attendancesDisp: [],
-      verifySubmit: false,
-      name: null, 
-      description: null, 
-      takeNote: null, 
+
+      attendancesNew: [],
+      loadingModal: false,
+
+      name: '', 
+      description: '', 
+      takeNote: '', 
       setupStart: null, 
       marketStart: null, 
       marketEnd: null,
+      verifySubmit: false,
 
       searchInput: ''
     }
@@ -260,10 +265,17 @@ export default class MarketAdd extends React.Component {
     let merchsIn = attendances.map((val, ind) => {
       return val.merchant.id
     })
-    if(attendances == null || name == null || takeNote == null || description == null || setupStart == null || marketStart == null || marketEnd == null){
-      console.log('complete all fields')
+    if(attendances.length == 0) {
+      systemAlert('Content Required', 'A market must have at least one attendance.')
       this.setState({
-        errorMessage: 'please complete all required fields',
+        verifySubmit: false,
+        loading: false
+      })
+      return
+    }
+    if(name == '' || description == '' || setupStart == null || marketStart == null || marketEnd == null){
+      incompleteFields()
+      this.setState({
         verifySubmit: false,
         loading: false
       })

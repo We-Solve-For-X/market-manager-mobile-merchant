@@ -21,3 +21,14 @@ export function sendMessageError() {
       { cancelable: true }
     )
   }
+
+  export function systemAlert(topic = '', message = '') {
+    return Alert.alert(
+      topic,
+      message,
+      [
+        {text: 'OK'},
+      ],
+      { cancelable: true }
+    )
+  }

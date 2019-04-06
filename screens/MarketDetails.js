@@ -8,22 +8,23 @@ import AttendanceCard from '../components/markets/AttendanceCard'
 import AttendanceAddCard from '../components/markets/AttendanceAddCard'
 import { Feather, MaterialCommunityIcons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import axios from 'axios'
+import moment from 'moment'
 //consts & comps
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
 import { HostID } from "../config/env"
 //API
-import { view } from "../networking/nm_sfx_markets"
+import { view, loadAdd } from "../networking/nm_sfx_markets"
 
 export default class MarketDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      market: [],
+      market: {},
       attendances: [],
 
-      newMerchants: [],
+      newAttendances: [],
       confirmDelete: false,
       addModal: false,
       searchInput: ''
@@ -43,8 +44,8 @@ export default class MarketDetails extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { confirmDelete, market, searchInput, addModal, newMerchants, attendances } = this.state
-    const { unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm  } = market
+    const { confirmDelete, market, searchInput, addModal, attendances, newAttendances } = this.state
+    const { id, unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm  } = market
 
     return (
       <View style={styles.container}>
@@ -52,14 +53,15 @@ export default class MarketDetails extends React.Component {
           animationType="fade"
           transparent={true}
           visible={addModal}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
+          // onRequestClose={() => {
+          //   Alert.alert('Modal has been closed.');
+          // }}
+          >
           <View style={{flex: 1, padding: 80, backgroundColor: colors.pBlackTransp, flexDirection: 'column', justifyContent: 'flex-start'}}>
           <View style={{backgroundColor: colors.pGrey, padding: 15, width: '100%', height: '100%'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.primary, width: '100%', padding: 10}}>
             <Title style={{color: colors.pWhite}}>Add Merchants</Title>
-            <Button onPress={() => {this.setState({addModal: false})}}>
+            <Button onPress={() => this._toggleModal(false)}>
               <Text>Done</Text>
               <MaterialIcons name={'done'} size={22}/>
             </Button>
@@ -71,7 +73,7 @@ export default class MarketDetails extends React.Component {
             value={searchInput}
           />
           <FlatList
-            data={newMerchants}
+            data={newAttendances}
             //keyExtractor={(item) => item.spotSummary.spotId}
             renderItem={({item}) => this._renderAddAttendance(item)}
             scrollEnabled={false}
@@ -148,11 +150,11 @@ export default class MarketDetails extends React.Component {
               <Text>Attendances: </Text>
             </View>
             <TextInput
-              placeholder={'Description of the market instance'}
-              onChangeText={(description) => this.setState({description})}
+              placeholder={'No attendance count'}
+              //onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={nAttendances}
+              value={`${nAttendances}`}
               editable={false}
             />
           </View>
@@ -179,10 +181,9 @@ export default class MarketDetails extends React.Component {
             </View>
             <TextInput
               placeholder={'Description of the market instance'}
-              onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={setupStart}
+              value={moment(setupStart).format("dddd Do MMM YYYY HH:mm")}
               editable={false}
             />
           </View>
@@ -197,7 +198,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'12 April 2019 08:00'}
+              value={moment(marketStart).format("dddd Do MMM YYYY HH:mm")}
               editable={false}
             />
           </View>
@@ -212,7 +213,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'12 April 2019 15:00'}
+              value={moment(marketEnd).format("dddd Do MMM YYYY HH:mm")}
               editable={false}
             />
           </View>
@@ -227,7 +228,7 @@ export default class MarketDetails extends React.Component {
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
               maxLength={28}
-              value={'Information that is relevant to the merchants will be displayed here. '}
+              value={takeNote}
               editable={false}
             />
           </View>
@@ -236,7 +237,7 @@ export default class MarketDetails extends React.Component {
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  backgroundColor: colors.primary, width: '100%', padding: 10}}>
             <Title style={{color: colors.pWhite}}>Attendances</Title>
-            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => this.setState({addModal: true})}>
+            <Button style={{marginHorizontal: 15, ...styleConsts.buttonBorder}} onPress={() => this._toggleModal(true)}>
               <Text>ADD</Text>
               <Feather name="user-plus" size={22}/>
             </Button>
@@ -276,11 +277,35 @@ export default class MarketDetails extends React.Component {
       )
   }
 
-  _renderAddAttendance = () => {
-    const navigation = this.props.navigation
+  _renderAddAttendance = (attendance = {}) => {
+    //const navigation = this.props.navigation
+    let id = this.state.id
     return (
-      <AttendanceAddCard isCreate={false}/>
+      <AttendanceAddCard marketId={id} attendance={attendance} removeNewAttendance={this._removeNewAttendance} />
       )
+  }
+
+  _toggleModal = async (expand = false) => {
+    this.setState({ addModal: expand, modalLoad: true })
+
+    if(expand){
+      let id = this.state.id
+      const response = await loadAdd(HostID, id, this.signal.token)
+      console.log(response)
+      if (response.code == 200) {
+        this.setState({
+          newAttendances: response.data.attendances,
+          modalLoad: false
+        }) 
+      } else {
+        this.setState({
+          errorMessage: response.data,
+          modalLoad: false
+        })
+      }
+    } else {
+      this._fetchData()
+    }
   }
 
   _applySearch = (searchInput) => {
@@ -291,17 +316,24 @@ export default class MarketDetails extends React.Component {
       const standName = item.standName.toLowerCase().replace(" ", "")
       return standName.includes(query)
      })
-
+     //FIXME: prevent reload every time modal is hiden to optimise data transfer
      this.setState({merchantsDisp})
   }
 
+  _removeNewAttendance = (id = '') => {
+    console.log('removing..')
+    let cAttendances = this.state.newAttendances
+    let newAttendances = cAttendances.filter(function(att, index, arr){
+      return att.merchant.id != id
+    })
+    this.setState({newAttendances})
+  }
+
+
   _fetchData = async () => {
-    console.log("fetching data")
     this.setState({ loading: true })
     const idIn = this.props.navigation.state.params.id
-    console.log('id', idIn)
     const response = await view(idIn, this.signal.token)
-    console.log('data', response)
     if (response.code == 200) {
       this.setState({
         market: response.data.market,

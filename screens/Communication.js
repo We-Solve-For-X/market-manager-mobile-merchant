@@ -9,9 +9,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
+import { HostID } from "../config/env";
 //API
 import { messageList } from "../networking/stubs"
-import { adminInbox } from "../networking/nm_sfx_markMan"
+import { adminInbox } from "../networking/nm_sfx_communication"
 
 export default class Communication extends React.Component {
   constructor(props) {
@@ -80,7 +81,7 @@ export default class Communication extends React.Component {
 
 
     this.setState({ loading: true })
-    const response = await adminInbox('1234', this.signal.token)
+    const response = await adminInbox(HostID, this.signal.token)
     if (response.code == 200) {
       this.setState({
         messages: response.data,
