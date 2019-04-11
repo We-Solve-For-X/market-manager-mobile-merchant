@@ -60,18 +60,18 @@ export default class AttendanceCard extends React.PureComponent {
             style={{marginHorizontal: 7, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: '100%'}} 
             onPress={() => this.setState({isExpanded: !isExpanded})}>
             <View style={{height: '87%', width: 1, backgroundColor: colors.pWhite}}/>
-            <Icon name="unfriend" style={{color: colors.pWhite, marginHorizontal: 20}}/>
+            <MaterialCommunityIcons name="dots-horizontal" size={25} style={{color: colors.pWhite, marginHorizontal: 20}}/>
           </TouchableOpacity>
         </View>
 
         <ViewSwitch hide={!isExpanded} style={{width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingVertical: 4, backgroundColor: colors.primary, borderBottomLeftRadius: 3, borderBottomRightRadius: 3}}>
-          {this._renderExpand(isCreate, id, merchant.id)}
+          {this._renderExpand(isCreate, merchant.id, invoice ? invoice.status : null)}
         </ViewSwitch>
       </View>
     )
   }
 
-  _renderExpand = (isCreate = false, attId = '', merchId = '') => {
+  _renderExpand = (isCreate = false, merchId = '', invStatus = '') => {
     if(isCreate){
       return(
         <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: '95%'}}>
@@ -87,49 +87,48 @@ export default class AttendanceCard extends React.PureComponent {
       return(
       <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
-            <Button style={{marginVertical: 10, marginHorizontal: 5, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'card' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'card'})}>
-              <Text>CARD</Text>
-              <MaterialIcons name="payment" size={24} />
-            </Button>
-            <Button style={{marginVertical: 10, marginHorizontal: 5, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'cash' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'cash'})}>
-              <Text>CASH</Text>
-              <MaterialCommunityIcons name="cash" size={26} />
-            </Button>
-            <Button style={{marginVertical: 10, marginHorizontal: 5, borderColor: colors.secondary, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'eft' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'eft'})}>
-              <Text>EFT</Text>
-              <MaterialIcons name="computer" size={23} />
-            </Button>
-        </View>
+        <ViewSwitch hide={invStatus == 'paid'}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
+              <Button style={{marginVertical: 10, marginHorizontal: 5, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'card' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'card'})}>
+                <Text>CARD</Text>
+                <MaterialIcons name="payment" size={24} />
+              </Button>
+              <Button style={{marginVertical: 10, marginHorizontal: 5, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'cash' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'cash'})}>
+                <Text>CASH</Text>
+                <MaterialCommunityIcons name="cash" size={26} />
+              </Button>
+              <Button style={{marginVertical: 10, marginHorizontal: 5, borderColor: colors.secondary, ...styleConsts.buttonBorder, ...{backgroundColor: this.state.paymentMethod == 'eft' ? colors.pGreen : colors.pWhite}}} onPress={() => this.setState({paymentMethod: 'eft'})}>
+                <Text>EFT</Text>
+                <MaterialIcons name="computer" size={23} />
+              </Button>
+          </View>
 
+          <ViewSwitch hide={this.state.paymentMethod == null}>
+            <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
+              <TextInput
+                placeholder={'Amount'}
+                onChangeText={(amount) => {this.setState({amount})}}
+                defaultValue={`${this.state.amount}`}
+                style={styles.textInput}
+                maxLength={150}
+                value={this.state.amount}
+              />
+              <TextInput
+                placeholder={'Additional payment comment'}
+                onChangeText={(paymentComment) => this.setState({paymentComment})}
+                style={styles.textInput}
+                maxLength={250}
+                value={this.state.paymentComment}
+              />
+              <Button style={{marginVertical: 10, marginHorizontal: 5, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this.state.submitting ? null : this._submitPayment()}>
+                <Text>SUBMIT</Text>
+                {this.state.submitting ? <ActivityIndicator/> : <AntDesign name="check" size={23} />}
+              </Button>
 
-        {this.state.paymentMethod != null ? 
-        (<View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
-          <TextInput
-            placeholder={'Amount'}
-            onChangeText={(amount) => {this.setState({amount})}}
-            defaultValue={`${this.state.amount}`}
-            style={styles.textInput}
-            maxLength={150}
-            value={this.state.amount}
-          />
-          <TextInput
-            placeholder={'Additional payment comment'}
-            onChangeText={(paymentComment) => this.setState({paymentComment})}
-            style={styles.textInput}
-            maxLength={250}
-            value={this.state.paymentComment}
-          />
-          <Button style={{marginVertical: 10, marginHorizontal: 5, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this.state.submitting ? null : this._submitPayment()}>
-            <Text>SUBMIT</Text>
-            {this.state.submitting ? <ActivityIndicator/> : <AntDesign name="check" size={23} />}
-          </Button>
-
-        </View>)
-        :
-        (null)}
-
-        
+            </View>
+          </ViewSwitch>
+            
+        </ViewSwitch>
 
         <View style={{height: 1, width: '96%', backgroundColor: colors.pWhite}}/>
 
@@ -156,7 +155,7 @@ export default class AttendanceCard extends React.PureComponent {
               style={{marginVertical: 5, marginHorizontal: 15, borderColor: colors.secondary, backgroundColor: colors.pRed , ...styleConsts.buttonBorder}} 
               onPress={() => this.setState({verifyRemove: true})}>
               <Text>REMOVE</Text>
-              <Ionicons name="md-remove" size={22} />
+              {/* <Ionicons name="md-remove" size={22} /> */}
             </Button>
           </View>) }
 
@@ -173,13 +172,13 @@ export default class AttendanceCard extends React.PureComponent {
     const idIn = this.props.attendance.id
     const response = await removeAttendance(idIn, this.signal.token)
     if (response.code == 200) {
-      this.setState({
+      await this.setState({
         removing: false,
         isExpanded: false
-      }) 
-      this.props.updateParent()
+      })
+      await this.props.updateParent()
     } else {
-      this.setState({
+      await this.setState({
         errorMessage: response.data,
         removing: false
       })

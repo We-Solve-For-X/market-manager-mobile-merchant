@@ -4,6 +4,7 @@ import { Heading, Subtitle } from '@shoutem/ui'
 import SearchBar from '../components/common/SearchBar'
 import axios from 'axios'
 //consts & comps
+import ViewSwitch from "../components/common/ViewSwitch"
 import MerchantCard from '../components/merchants/MerchantCard'
 import NoContent from "../components/common/NoContent"
 import colors from '../constants/colors'
@@ -46,17 +47,18 @@ export default class Merchants extends React.Component {
           }
           >
 
-          <View style={{ marginVertical: 8, padding: 8, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
-            <Heading>Merchant Requests</Heading>
-            <Subtitle>You have {nPending} pending merchant requests</Subtitle>
-          </View>
-
-          <FlatList
-            data={pending}
-            //keyExtractor={(item) => item.spotSummary.spotId}
-            renderItem={({item}) => this._renderNewMerch(item)}
-            scrollEnabled={false}
-          />
+          <ViewSwitch hide={nPending == 0}>
+            <View style={{ marginVertical: 8, padding: 8, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
+              <Heading>Merchant Requests</Heading>
+              <Subtitle>You have {nPending} pending merchant requests</Subtitle>
+            </View>
+            <FlatList
+              data={pending}
+              //keyExtractor={(item) => item.spotSummary.spotId}
+              renderItem={({item}) => this._renderNewMerch(item)}
+              scrollEnabled={false}
+            />
+          </ViewSwitch>
 
           <View style={{ marginVertical: 8, padding: 8, borderRadius: 5, width: '100%', backgroundColor: colors.pWhite, ...styleConsts.viewShadow}}>
             <Heading>All Merchant</Heading>

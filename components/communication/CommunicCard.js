@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       marginBottom: 10,
       padding: 8,
-      borderRadius: 3
+      borderRadius: 5
     },
     topic: {
       ...styleConsts.textOne,

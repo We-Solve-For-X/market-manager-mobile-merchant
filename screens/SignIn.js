@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, AsyncStorage, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ImageBackground, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import { NavigationEvents } from 'react-navigation'
 import { Constants } from 'expo'
 import imagesRef from '../assets/imagesRef'
@@ -54,17 +54,17 @@ class SignIn extends React.Component {
       <KeyboardAvoidingView behavior="padding" style={{width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} >
       
       <View style={{
-        width: '60%', 
-        height: '80%',
+        width: '70%', 
+        height: '85%',
         flexDirection: 'column',
         justifyContent: 'space-between',
         backgroundColor: colors.pBlackTransp, 
         paddingHorizontal: '4%', borderRadius: 5}}>
         
         <View style={{flex: 3, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 38, color: colors.pWhite}}>Irene Village Market</Text>
-          <FontAwesome name="shopping-basket" size={50} style={{size: 50, color: colors.pWhite, marginVertical: 20}}/>
-          <Text style={{fontSize: 30, color: colors.pWhite}}>Market Manager</Text>
+          <Text style={Platform.isPad ? {fontSize: 38, color: colors.pWhite} : {fontSize: 22, color: colors.pWhite}}>Irene Village Market</Text>
+          <FontAwesome name="shopping-basket" size={Platform.isPad ? 50 : 30} style={{size: 50, color: colors.pWhite, marginVertical: 20}}/>
+          <Text style={Platform.isPad ? {fontSize: 30, color: colors.pWhite} : {fontSize: 18, color: colors.pWhite}}>Market Manager</Text>
         </View>
 
         <View style={{flex: 2, flexDirection: 'column', justifyContent: 'space-around'}}>

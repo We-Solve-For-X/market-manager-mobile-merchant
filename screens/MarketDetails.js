@@ -25,6 +25,7 @@ export default class MarketDetails extends React.Component {
     this.state = {
       market: {},
       attendances: [],
+      attendancesDisp: [],
       loading: false,
       newAttendances: [],
       confirmDelete: false,
@@ -47,7 +48,7 @@ export default class MarketDetails extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { confirmDelete, market, searchInput, addModal, attendances, newAttendances, deleting, loading } = this.state
+    const { confirmDelete, market, searchInput, addModal, attendances, newAttendances, deleting, loading, attendancesDisp } = this.state
     const { id, unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm  } = market
 
     return (
@@ -265,9 +266,9 @@ export default class MarketDetails extends React.Component {
             onChangeText={ (searchInput) => this._applySearch(searchInput)}
             value={searchInput}
           />
-
           <FlatList
-            data={attendances}
+            data={attendancesDisp}
+            contentContainerStyle={{paddingHorizontal: 13}}
             //keyExtractor={(item) => item.spotSummary.spotId}
             renderItem={({item}) => this._renderAttendance(item)}
             scrollEnabled={false}
@@ -302,31 +303,31 @@ export default class MarketDetails extends React.Component {
       const response = await loadAdd(HostID, id, this.signal.token)
       console.log(response)
       if (response.code == 200) {
-        this.setState({
+        await this.setState({
           newAttendances: response.data.attendances,
           modalLoad: false
         }) 
       } else {
-        this.setState({
+        await this.setState({
           errorMessage: response.data,
           modalLoad: false
         })
       }
     } else {
-      this._fetchData()
+      await this._fetchData()
     }
   }
 
   _applySearch = (searchInput) => {
     this.setState({searchInput})
-    const { merchants } = this.state
+    const { attendances } = this.state
     const query = searchInput.toLowerCase().replace(" ", "")
-    const merchantsDisp = merchants.filter(item => {
-      const standName = item.standName.toLowerCase().replace(" ", "")
+    const attendancesDisp = attendances.filter(item => {
+      const standName = item.merchant.name.toLowerCase().replace(" ", "")
       return standName.includes(query)
      })
      //FIXME: prevent reload every time modal is hiden to optimise data transfer
-     this.setState({merchantsDisp})
+     this.setState({attendancesDisp})
   }
 
   _deleteMarket = async () => {
@@ -357,14 +358,15 @@ export default class MarketDetails extends React.Component {
     const idIn = this.props.navigation.state.params.id
     const response = await view(idIn, this.signal.token)
     if (response.code == 200) {
-      this.setState({
+      await this.setState({
         market: response.data.market,
         attendances: response.data.attendances,
+        attendancesDisp: response.data.attendances,
         id: idIn,
         loading: false
       }) 
     } else {
-      this.setState({
+      await this.setState({
         errorMessage: response.data,
         loading: false
       })
@@ -381,7 +383,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.pViewBg,
-    paddingHorizontal: 10,
+    //paddingHorizontal: 10,
   },
   lineContainer: {
     width: '100%', 

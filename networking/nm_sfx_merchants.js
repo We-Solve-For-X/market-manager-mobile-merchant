@@ -11,7 +11,7 @@ const MID_URL = 'merchants'
                     approved: List[Merchant])
 */
 export async function load(hostId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/load?hostId=${hostId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/load/${hostId}`
     const packDataPromise = get(url, token)
 
     return packageResponse(packDataPromise)
@@ -21,8 +21,8 @@ export async function load(hostId = '', token) {
     Boolean
 */
 export async function accept(id = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/accept?id=${id}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/accept/${id}`
+    const packDataPromise = post(url, {}, token)
 
     return packageResponse(packDataPromise)
 }
@@ -31,8 +31,8 @@ export async function accept(id = '', token) {
     Boolean
 */
 export async function reject(id = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/reject?id=${id}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/reject/${id}`
+    const packDataPromise = post(url, {}, token)
 
     return packageResponse(packDataPromise)
 }
@@ -41,8 +41,8 @@ export async function reject(id = '', token) {
     Boolean
 */
 export async function activate(id = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/activate?id=${id}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/activate/${id}`
+    const packDataPromise = post(url, {}, token)
 
     return packageResponse(packDataPromise)
 }
@@ -51,8 +51,8 @@ export async function activate(id = '', token) {
     Boolean
 */
 export async function deactivate(id = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/deactivate?id=${id}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/deactivate/${id}`
+    const packDataPromise = post(url, {}, token)
 
     return packageResponse(packDataPromise)
 }
@@ -81,6 +81,17 @@ export async function getMerch(id = '', token) {
     const url =  MARKMAN_BASE_URL + `/${MID_URL}/view/${id}`
     const packDataPromise = get(url, token)
 
+    return packageResponse(packDataPromise)
+}
+
+/** Response:
+  Boolean
+*/
+export async function updatePriceZone(id = '', priceZone = {}, token) {
+    //Will be changed to a post soon
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/priceZones/update/${id}`
+    const packDataPromise = post(url, priceZone, token)
+    
     return packageResponse(packDataPromise)
 }
 

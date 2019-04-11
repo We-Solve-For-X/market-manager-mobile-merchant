@@ -25,36 +25,16 @@ export default class MarketCard extends React.PureComponent {
         <View >
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
             <Title style={styles.date} numberOfLines={1}>{moment(marketStart).format("dddd Do MMM YYYY")}</Title>
-            {/* <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <Text style={styles.time} numberOfLines={1}>{name}</Text>
-              <Icon name="right-arrow" style={{color: colors.pWhite}}/>
-            </View> */}
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4, marginTop: 5}}>
             <Text style={styles.name} numberOfLines={2}>{name}</Text>
           </View>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4, marginTop: 1}}>
+            <Text style={styles.code} numberOfLines={2}>{unCode}</Text>
+          </View>
         </View>
         <Icon name="right-arrow" style={{color: colors.pWhite}}/>
       </View>
-
-      
-        
-
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginTop: 4}}>
-          <Text style={styles.desc} numberOfLines={1}>{'Attendances: 163'}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
-          <Text style={styles.desc} numberOfLines={1}>{'Paid: '}</Text>
-          <Text style={styles.paidY} numberOfLines={1}>{'121 '}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
-          <Text style={styles.desc} numberOfLines={1}>{'Awaitng: '}</Text>
-          <Text style={styles.paidA} numberOfLines={1}>{'20'}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4}}>
-          <Text style={styles.desc} numberOfLines={1}>{'Outstanding: '}</Text>
-          <Text style={styles.paidN} numberOfLines={1}>{'22'}</Text>
-        </View>
       </TouchableOpacity>
     )
   }
@@ -71,13 +51,17 @@ const styles = StyleSheet.create({
       marginBottom: 10,
       // paddingHorizontal: 8,
       // paddingVertical: 5,
-      borderRadius: 4
+      borderRadius: 5
     },
     date: {
       ...styleConsts.textOne,
       color: colors.pWhite
     }, 
     name: {
+      ...styleConsts.textTwo,
+      color: colors.pWhite
+    }, 
+    code: {
       ...styleConsts.textThree,
       color: colors.pWhite
     }, 

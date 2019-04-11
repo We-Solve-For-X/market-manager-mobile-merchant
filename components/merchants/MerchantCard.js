@@ -74,12 +74,12 @@ export default class MerchentCard extends React.PureComponent {
     this.setState({loading: true})
     const response = isAccept ? await accept(id, this.signal.token) : await reject(id, this.signal.token)
     if (response.code == 200) {
-      await this.props.reloadParent()
-      this.setState({
+      await this.setState({
         loading: false,
       }) 
+      await this.props.reloadParent()
     } else {
-      this.setState({
+      await this.setState({
         errorMessage: response.data,
         loading: false
       })
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       marginBottom: 8,
       //paddingHorizontal: 4,
-      borderRadius: 3
+      //borderRadius: 3
     },
     topBox: {
       width: '100%',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       //marginBottom: 8,
       padding: 7,
-      //borderRadius: 3
+      borderRadius: 5
     },
     textMain: {
       ...styleConsts.textOne,

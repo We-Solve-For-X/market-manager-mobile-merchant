@@ -31,6 +31,19 @@ export function post(path, body, token) {
   })
 }
 
+export function dellete(path, token) {
+  //console.log('url', `${BASE_URL}/${path}`)
+  return axios.delete(`${BASE_URL}/${path}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json, text/plain, */*'
+    },
+    timeout: 9000,
+    cancelToken: token
+  })
+}
+
 export function getOc(path, token) {
   console.log('url', `${OPENCAGE_URL}/${path}`)
   return axios.get(`${OPENCAGE_URL}/${path}`, {

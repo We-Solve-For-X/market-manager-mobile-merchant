@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Switch, ActivityIndicator, Picker } from 'react-native'
+import { View, StyleSheet, Switch, TouchableOpacity, Picker } from 'react-native'
 import ButtonFloat from '../components/common/ButtonFloat'
 import { Text, Button, DropDownMenu, TextInput } from '@shoutem/ui'
-import { EvilIcons, FontAwesome } from '@expo/vector-icons'
+import { EvilIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import ViewLoad from "../components/common/ViewLoad"
 import axios from 'axios'
 //consts & comps
@@ -10,16 +10,20 @@ import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
 import { merchant1 } from "../networking/stubs";
-import { activate, deactivate, getMerch } from "../networking/nm_sfx_merchants";
+import { activate, deactivate, getMerch, updatePriceZone } from "../networking/nm_sfx_merchants";
 
 export default class MerchantsDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      id: '',
       loading: false,
       activateLoading: false,
       merchant: {},
-      priceZoneBrackets: []
+
+      priceZoneBrackets: [],
+      updatePrZone: false,
+      updatingPz: false
     }
 
     this.signal = axios.CancelToken.source()
@@ -31,7 +35,7 @@ export default class MerchantsDetails extends React.Component {
 
   render() {
     const { navigation } = this.props
-    const { merchant } = this.state
+    const { merchant, priceZoneBrackets, updatePrZone, updatingPz } = this.state
     const { repName, repSurname, repEmail, repCell, name, legalName, description } = merchant
     const { isActive, hostId, authId, status, category, standId, priceZone } = merchant
 
@@ -50,54 +54,93 @@ export default class MerchantsDetails extends React.Component {
         <View style={styles.dividerBig}/>
 
           <DataHeading icon={'user'} title={'Representative'}/>
-          <DataRow title={'name'} text={repName ? repName : null}/>
-          <DataRow title={'surname'} text={repSurname ? repSurname : null}/>
-          <DataRow title={'email'} text={repEmail ? repEmail : null}/>
-          <DataRow title={'cell'} text={repCell ? repCell : null}/>
+          <DataRow title={'Name'} text={repName ? repName : null}/>
+          <DataRow title={'Surname'} text={repSurname ? repSurname : null}/>
+          <DataRow title={'Email'} text={repEmail ? repEmail : null}/>
+          <DataRow title={'Cell'} text={repCell ? repCell : null}/>
 
         <View style={styles.divider}/>
 
         <DataHeading icon={'pencil'} title={'Meta'}/>
-          <DataRow title={'status'} text={status ? status : null}/>
-          <DataRow title={'category'} text={category ? category : null}/>
-          <DataRow title={'stand'} text={standId ? standId : '(no stand id)'}/>
-
+          <DataRow title={'Status'} text={status ? status : null}/>
+          <DataRow title={'Is Active'} text={isActive != null ? `${isActive}` : null}/>
+          <DataRow title={'Stand'} text={standId ? standId : '(no stand id)'}/>
+          <DataRow title={'Category'} text={category ? category : null}/>
         <View style={styles.divider}/>
 
         <View style={{width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
           <DataHeading icon={'gear'} title={'Settings'}/>
           <View style={styles.lineContainer}>
             <View style={styles.titleBox}>
-              <Text style={styles.text3}>{'Is Active: '}</Text>
+              <Text style={styles.text3}>{'Active: '}</Text>
             </View>
             <ViewLoad hide={this.state.activateLoading}>
               <Switch
-                onValueChange={() => this._toogleState(isActive, 'id')}
+                onValueChange={() => this._toogleState(isActive)}
                 value={isActive}
                 style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
                 trackColor={{false: colors.pRed, true: colors.pGreen}}
               />
             </ViewLoad>
           </View>
-          <DataRow title={'price zone'} text={priceZone ? priceZone.name : null}/>
+
+          <View style={styles.lineContainer}>
+            <View style={styles.titleBox}>
+              <Text style={styles.text3}>{'Price Zone: '}</Text>
+            </View>
+            <View style={{flexDirection: 'column', width: '100%'}}> 
+              
+              {!updatePrZone ? 
+                (<View>
+                  <TouchableOpacity style={{marginLeft: 8, margin: 2}} onPress={() => this.setState({updatePrZone: true})}>
+                    <Text> {priceZone ? priceZone.name : null}</Text>
+                  </TouchableOpacity>
+                </View>)
+                :
+                (<ViewLoad hide={updatingPz}>
+                  {priceZoneBrackets.map( (bracket) => {
+                    return (
+                      <TouchableOpacity style={{marginVertical: 5, marginHorizontal: 8, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}} onPress={() => this._updatePriceBracket(bracket)}>
+                        <MaterialCommunityIcons size={22} name="square-inc-cash" /> 
+                        <Text>  R{bracket.cost}: {bracket.name}</Text>
+                      </TouchableOpacity>
+                    )})
+                  }
+                </ViewLoad>) 
+              }
+
+            </View>
+          </View>
+
+
+          
         </View>
 
         <View style={styles.divider}/>
 
-        {/* <Picker
-          selectedValue={this.state.language}
-          style={{height: 50, width: 100}}
-          mode={'dropdown'}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setState({language: itemValue})
-          }>
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker> */}
   
         <ButtonFloat navigation={navigation}/>
       </View>
     )
+  }
+
+  _updatePriceBracket = async ({key, name, cost}) => {
+    this.setState({updatingPz: true})
+    let id = this.state.id
+    let priceZone = {key, name}
+    let response = await updatePriceZone(id, priceZone, this.signal.token)
+    if (response.code == 200) {
+      await this.setState({
+        updatingPz: false,
+        updatePrZone: false
+      }) 
+      this._fetchData()
+    } else {
+      this.setState({
+        errorMessage: response.data,
+        updatingPz: false
+      })
+    }
   }
 
   _toogleState = async (isActive = false) => {
@@ -112,7 +155,7 @@ export default class MerchantsDetails extends React.Component {
     } else {
       this.setState({
         errorMessage: response.data,
-        loading: false
+        activateLoading: false
       })
     }
   }
@@ -125,6 +168,7 @@ export default class MerchantsDetails extends React.Component {
       this.setState({
         merchant: response.data.merchant,
         priceZoneBrackets: response.data.priceZoneBrackets,
+        id: idIn,
         loading: false
       }) 
     } else {
