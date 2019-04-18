@@ -85,7 +85,7 @@ export default class AttendanceCard extends React.PureComponent {
       )
     } else {
       return(
-      <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>
+      <View>
 
         <ViewSwitch hide={invStatus == 'paid'}>
           <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%'}}>

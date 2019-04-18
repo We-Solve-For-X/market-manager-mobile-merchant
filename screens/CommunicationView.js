@@ -20,10 +20,6 @@ export default class CommunicationView extends React.Component {
     }
   }
 
-  componentDidMount = () => {
-    //this._fetchData()
-  }
-
   render() {
     const { navigation } = this.props
     const message = navigation.getParam('message', {none: 'none'});

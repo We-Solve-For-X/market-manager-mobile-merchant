@@ -3,5 +3,6 @@ export const ProfileCnsts = {
     name: 'NAME',
     surname: 'SRNM',
     email: 'EMAIL',
-    role: 'ROLE'
+    role: 'ROLE',
+    adminstId: 'ADMN_ID'
 }

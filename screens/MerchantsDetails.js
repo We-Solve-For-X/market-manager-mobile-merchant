@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Switch, TouchableOpacity, Picker } from 'react-native'
 import ButtonFloat from '../components/common/ButtonFloat'
 import { Text, Button, DropDownMenu, TextInput } from '@shoutem/ui'
-import { EvilIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
+import { EvilIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import ViewLoad from "../components/common/ViewLoad"
 import axios from 'axios'
 //consts & comps
@@ -11,6 +11,7 @@ import layout from '../constants/layout'
 //API
 import { merchant1 } from "../networking/stubs";
 import { activate, deactivate, getMerch, updatePriceZone } from "../networking/nm_sfx_merchants";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default class MerchantsDetails extends React.Component {
   constructor(props){
@@ -31,6 +32,10 @@ export default class MerchantsDetails extends React.Component {
 
   componentDidMount = () => {
     this._fetchData()
+  }
+
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
   }
 
   render() {
@@ -74,14 +79,13 @@ export default class MerchantsDetails extends React.Component {
             <View style={styles.titleBox}>
               <Text style={styles.text3}>{'Active: '}</Text>
             </View>
-            <ViewLoad hide={this.state.activateLoading}>
-              <Switch
-                onValueChange={() => this._toogleState(isActive)}
+            <Switch
+                onValueChange={() => this.state.activateLoading ? null : this._toogleState(isActive)}
                 value={isActive}
                 style={{ transform: [{ scaleX: .7 }, { scaleY: .7 }] }}
                 trackColor={{false: colors.pRed, true: colors.pGreen}}
               />
-            </ViewLoad>
+            <ViewLoad hide={this.state.activateLoading}/>
           </View>
 
           <View style={styles.lineContainer}>
@@ -92,8 +96,9 @@ export default class MerchantsDetails extends React.Component {
               
               {!updatePrZone ? 
                 (<View>
-                  <TouchableOpacity style={{marginLeft: 8, margin: 2}} onPress={() => this.setState({updatePrZone: true})}>
+                  <TouchableOpacity style={{marginLeft: 8, margin: 2, flexDirection: 'row'}} onPress={() => this.setState({updatePrZone: true})}>
                     <Text> {priceZone ? priceZone.name : null}</Text>
+                    <FontAwesome size={15} name="sort-down" style={{marginHorizontal: 9}} />
                   </TouchableOpacity>
                 </View>)
                 :

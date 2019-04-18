@@ -28,10 +28,12 @@ export default class MarketDetails extends React.Component {
       attendancesDisp: [],
       loading: false,
       newAttendances: [],
+      newAttendancesDisp: [],
       confirmDelete: false,
       deleting: false,
       addModal: false,
-      searchInput: ''
+      searchInput: '',
+      modalSearchInput: ''
     }
 
     this.signal = axios.CancelToken.source()
@@ -42,13 +44,13 @@ export default class MarketDetails extends React.Component {
     this._fetchData()
   }
 
-  // componentWillUnmount() {
-  //   this.signal.cancel('API request canceled due to componentUnmount')
-  // }
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
 
   render() {
     const { navigation } = this.props
-    const { confirmDelete, market, searchInput, addModal, attendances, newAttendances, deleting, loading, attendancesDisp } = this.state
+    const { confirmDelete, market, searchInput, addModal, modalSearchInput, newAttendancesDisp, deleting, loading, attendancesDisp } = this.state
     const { id, unCode, name, description, takeNote, setupStart, marketStart, marketEnd, standPrices, nAttendances, nInvPayed, nInvOuts, nInvSubm  } = market
 
     return (
@@ -77,11 +79,11 @@ export default class MarketDetails extends React.Component {
           >
           <SearchBar
             placeholder={'Find a Merchant'} 
-            onChangeText={ (searchInput) => this._applySearch(searchInput)}
-            value={searchInput}
+            onChangeText={ (input) => this._applyModalSearch(input)}
+            value={modalSearchInput}
           />
           <FlatList
-            data={newAttendances}
+            data={newAttendancesDisp}
             //keyExtractor={(item) => item.spotSummary.spotId}
             renderItem={({item}) => this._renderAddAttendance(item)}
             scrollEnabled={false}
@@ -184,6 +186,20 @@ export default class MarketDetails extends React.Component {
               style={styles.textInput}
               maxLength={28}
               value={`${nInvPayed} Payed, ${nInvOuts} Outstanding, ${nInvSubm} Awaiting Review `}
+              editable={false}
+            />
+          </View>
+          <View style={styles.divider}/>
+
+          <View style={styles.lineContainer}>
+            <View style={styles.titleBox}>
+              <Text>Market Code: </Text>
+            </View>
+            <TextInput
+              onChangeText={(description) => this.setState({description})}
+              style={styles.textInput}
+              maxLength={28}
+              value={unCode ? `${unCode}` : null}
               editable={false}
             />
           </View>
@@ -305,6 +321,7 @@ export default class MarketDetails extends React.Component {
       if (response.code == 200) {
         await this.setState({
           newAttendances: response.data.attendances,
+          newAttendancesDisp: response.data.attendances,
           modalLoad: false
         }) 
       } else {
@@ -324,10 +341,23 @@ export default class MarketDetails extends React.Component {
     const query = searchInput.toLowerCase().replace(" ", "")
     const attendancesDisp = attendances.filter(item => {
       const standName = item.merchant.name.toLowerCase().replace(" ", "")
-      return standName.includes(query)
+      const refNum = item.invoice.refNum.toLowerCase().replace(" ", "")
+      return standName.includes(query) || refNum.includes(query)
      })
      //FIXME: prevent reload every time modal is hiden to optimise data transfer
      this.setState({attendancesDisp})
+  }
+
+  _applyModalSearch = (modalSearchInput) => {
+    this.setState({modalSearchInput})
+    const { newAttendances } = this.state
+    const query = modalSearchInput.toLowerCase().replace(" ", "")
+    const newAttendancesDisp = newAttendances.filter(item => {
+      const standName = item.merchant.name.toLowerCase().replace(" ", "")
+      return standName.includes(query)
+     })
+     //FIXME: prevent reload every time modal is hiden to optimise data transfer
+     this.setState({newAttendancesDisp})
   }
 
   _deleteMarket = async () => {
@@ -349,7 +379,7 @@ export default class MarketDetails extends React.Component {
     let newAttendances = cAttendances.filter(function(att, index, arr){
       return att.merchant.id != id
     })
-    this.setState({newAttendances})
+    this.setState({newAttendances, newAttendancesDisp: newAttendances, modalSearchInput: ''})
   }
 
 

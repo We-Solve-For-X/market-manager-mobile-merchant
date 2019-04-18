@@ -29,9 +29,9 @@ export default class Communication extends React.Component {
     this._fetchData()
   }
 
-  // componentWillUnmount() {
-  //   this.signal.cancel('API request canceled due to componentUnmount')
-  // }
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
 
   render() {
     const { navigation } = this.props

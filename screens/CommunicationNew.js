@@ -124,12 +124,8 @@ export default class CommunicationNew extends React.Component {
       this.setState({sending: false})
       return
     }
-    
     let message = {topic, text, fromId, fromName, recipientType: toSelected.recipientType, recipientId: toSelected.recipientId, description: toSelected.description}
-
-    console.log(message)
     const response = await sendMessage(message, this.signal.token)
-    console.log(response)
     if (response.code == 200) {
       this.setState({sending: false})
       this.props.navigation.goBack()

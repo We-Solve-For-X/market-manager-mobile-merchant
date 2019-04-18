@@ -13,7 +13,7 @@ import axios from 'axios'
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
-import { signinAdmin } from "../networking/nm_sfx_markMan";
+import { signinAdmin } from "../networking/nm_sfx_auth";
 import { asSetProfile } from "../services/asyncStorage/asApi";
 
 const appVersion = Constants.manifest.version
@@ -34,9 +34,9 @@ class SignIn extends React.Component {
     this._isLogedIn()
   }
 
-  // componentWillUnmount() {
-  //   this.signal.cancel('API request canceled due to componentUnmount')
-  // }
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
 
   render() {
     //const styles = this.props.style
@@ -114,7 +114,7 @@ class SignIn extends React.Component {
     
     const response = await signinAdmin(AuthIn, this.signal.token)
     if (response.code == 200) {
-      const res = await asSetProfile(response.data) 
+      const res = await asSetProfile(response.data, AuthIn.username) 
       if(res == false){
         this.setState({
           signingIn: false,

@@ -33,6 +33,10 @@ export default class Merchants extends React.Component {
     this._fetchData()
   }
 
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
+
   render() {
     const { navigation } = this.props
     const {searchInput, nPending, pending, nApproved, approved, approvedDisp, loading } = this.state

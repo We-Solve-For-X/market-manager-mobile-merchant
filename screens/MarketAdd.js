@@ -43,13 +43,14 @@ export default class MarketAdd extends React.Component {
   }
   
 
-  componentDidMount = () => {
-    this._fetchData()
+  componentDidMount = async () => {
+    await this._fetchData()
+    console.log(this.state.attendances)
   }
 
-  // componentWillUnmount() {
-  //   this.signal.cancel('API request canceled due to componentUnmount')
-  // }
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
 
   render() {
     const { navigation } = this.props
@@ -60,10 +61,7 @@ export default class MarketAdd extends React.Component {
         <View style={{width: '100%', flexDirection: 'column', alignItems: 'center'}}>
 
         <View style={{width: '100%', flexDirection: 'row', justifyContent: 'flex-end'}}>
-
-          
-
-          </View>
+        </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.primary, width: '100%', padding: 10}}>
           <Title style={{color: colors.pWhite}}>Market Information</Title>
@@ -111,7 +109,7 @@ export default class MarketAdd extends React.Component {
               placeholder={'Description of the market instance'}
               onChangeText={(description) => this.setState({description})}
               style={styles.textInput}
-              maxLength={28}
+              maxLength={80}
               value={description}
             />
           </View>
@@ -217,7 +215,7 @@ export default class MarketAdd extends React.Component {
               placeholder={'Information that will be usefull to the attendances'}
               onChangeText={(takeNote) => this.setState({takeNote})}
               style={styles.textInput}
-              //numberOfLines={4}
+              maxLength={300}
               value={takeNote}
               multiline = {true}
             />
@@ -310,14 +308,13 @@ export default class MarketAdd extends React.Component {
     const { attendances } = this.state
     const query = searchInput.toLowerCase().replace(" ", "")
     const attendancesDisp = attendances.filter(item => {
-      const standName = item.name.toLowerCase().replace(" ", "")
+      const standName = item.merchant.name.toLowerCase().replace(" ", "")
       return standName.includes(query)
      })
      this.setState({attendancesDisp})
   }
 
   _removeAttendance = (id = '') => {
-    console.log('removing..')
     let cAttendances = this.state.attendances
     let attendances = cAttendances.filter(function(att, index, arr){
       return att.merchant.id != id
@@ -326,7 +323,6 @@ export default class MarketAdd extends React.Component {
   }
 
   _fetchData = async () => {
-    console.log("fetching data")
     this.setState({ loading: true })
     const response = await loadCreate(HostID, this.signal.token)
     if (response.code == 200) {

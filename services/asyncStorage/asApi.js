@@ -70,8 +70,9 @@ export async function asSetProfile(profile = {}, username = ''){
     let surname = [ProfileCnsts.surname, profile.surname]
     let email = [ProfileCnsts.email, profile.email]
     let role = [ProfileCnsts.role, profile.role]
+    let id = [ProfileCnsts.adminstId, profile.id]
 
-    res = await asMultiSet([uname, name, surname, email, role])
+    res = await asMultiSet([uname, name, surname, email, role, id])
     return res
 }
 

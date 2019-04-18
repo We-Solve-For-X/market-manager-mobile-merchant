@@ -51,7 +51,6 @@ MarketsStack.navigationOptions = {
 
 const MerchantsStack = createStackNavigator({
   Merchants: Merchants,
-
 })
 MerchantsStack.navigationOptions = {
   tabBarLabel: 'Merchants',
@@ -85,7 +84,7 @@ CommunicationStack.navigationOptions = {
 }
 
 const PrimaryNavConfig = {
-  initialRouteName: 'MarketsStack',
+  initialRouteName: 'HomeStack',
   lazy: 'true',
   tabBarOptions:{
       indicatorStyle:{

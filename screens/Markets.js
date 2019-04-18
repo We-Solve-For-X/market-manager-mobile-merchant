@@ -30,6 +30,9 @@ export default class Markets extends React.Component {
     this._fetchData()
   }
 
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
+  }
 
   render() {
     const { markets, loading, nFuture, nPast } = this.state

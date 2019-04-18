@@ -1,4 +1,4 @@
-import { get, post } from '../networking/api'
+import { get, post, dellete } from '../networking/api'
 import { MARKMAN_BASE_URL } from "../config/env"
 import { packageResponse } from "../networking/responseProcessor"
 
@@ -14,7 +14,7 @@ const MID_URL = 'markets'
 //     marketEnd: String) 
 export async function createMarket(marketCreate = {}, token) {
     //Will be changed to a post soon
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/create`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/`
     const packDataPromise = post(url, marketCreate, token)
     
     return packageResponse(packDataPromise)
@@ -29,7 +29,7 @@ export async function createMarket(marketCreate = {}, token) {
 //                     comment: Option[String])
 export async function submitPayment(payment = {}, token) {
     //Will be changed to a post soon
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/submitPayment`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/payment`
     const packDataPromise = post(url, payment, token)
     
     return packageResponse(packDataPromise)
@@ -39,7 +39,7 @@ export async function submitPayment(payment = {}, token) {
 //             nPast: Int,
 //             markets: List[Market])
 export async function load(hostId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/load?hostId=${hostId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/${hostId}`
     const packDataPromise = get(url, token)
 
     return packageResponse(packDataPromise)
@@ -55,7 +55,7 @@ export async function load(hostId = '', token) {
 //                 description: String,
 //                 standId: Option[String])
 export async function loadCreate(hostId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/loadCreate?hostId=${hostId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/create/populate/${hostId}`
     const packDataPromise = get(url, token)
 
     return packageResponse(packDataPromise)
@@ -103,7 +103,7 @@ export async function loadCreate(hostId = '', token) {
 
 
 export async function view(marketId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/view?marketId=${marketId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/details/${marketId}`
     const packDataPromise = get(url, token)
 
     return packageResponse(packDataPromise)
@@ -121,7 +121,7 @@ export async function dataMail(marketId = '', token) {
 
 // case class LoadAdd(merchants: List[Merchant.Summary])
 export async function loadAdd(hostId = '', marketId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/loadAdd?hostId=${hostId}&marketId=${marketId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/available/${hostId}/${marketId}`
     const packDataPromise = get(url, token)
 
     return packageResponse(packDataPromise)
@@ -129,22 +129,22 @@ export async function loadAdd(hostId = '', marketId = '', token) {
 
 // Boolean
 export async function addMerchant(marketId = '', merchantId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/addMerchant?marketId=${marketId}&merchantId=${merchantId}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchant/${marketId}/${merchantId}`
+    const packDataPromise = post(url, {}, token)
 
     return packageResponse(packDataPromise)
 }
 
 export async function deleteMarket(marketId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/delete?marketId=${marketId}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/${marketId}`
+    const packDataPromise = dellete(url, token)
 
     return packageResponse(packDataPromise)
 }
 
 export async function removeAttendance(attendanceId = '', token) {
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/removeAttendance?attendanceId=${attendanceId}`
-    const packDataPromise = get(url, token)
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/attendance/${attendanceId}`
+    const packDataPromise = dellete(url, token)
 
     return packageResponse(packDataPromise)
 }
