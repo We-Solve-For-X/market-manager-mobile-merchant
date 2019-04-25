@@ -8,7 +8,7 @@ console.disableYellowBox = true
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
-  };
+  }
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -18,7 +18,7 @@ export default class App extends React.Component {
           onError={this._handleLoadingError}
           onFinish={this._handleFinishLoading}
         />
-      );
+      )
     } else {
       return (
         <View style={styles.container}>
@@ -28,8 +28,6 @@ export default class App extends React.Component {
       )
     }
   }
-
-  
 
   _loadResourcesAsync = async () => {
     return Promise.all([
@@ -51,18 +49,18 @@ export default class App extends React.Component {
         'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
         'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
       }),
-    ]);
-  };
+    ])
+  }
 
   _handleLoadingError = error => {
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
     console.warn(error);
-  };
+  }
 
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
-  };
+  }
 }
 
 const styles = StyleSheet.create({
@@ -70,4 +68,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-});
+})

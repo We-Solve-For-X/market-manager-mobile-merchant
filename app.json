@@ -2,26 +2,45 @@
   "expo": {
     "name": "marketManager-admin-mobile",
     "description": "A very interesting project.",
-    "slug": "marketManager-admin-mobile",
+    "slug": "marketmanager-admin-mobile",
     "privacy": "public",
     "sdkVersion": "31.0.0",
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.png", //TODO: Icon & SPlash
+    "primaryColor": "#404A58",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
+   "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/images/**"
     ],
-    "ios": {
-      "supportsTablet": true
+     "ios": {
+      "bundleIdentifier": "com.solveforx.marketmanager",
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.solveforx.marketmanager",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     }
   }
 }
