@@ -12,9 +12,9 @@ export default {
 
   cardBg: '#444444',
 
-  pRed: '#C70039',
+  pRed: '#C0392B',
   pGreen: '#95BB52',
-  pYellow: '#EAEB5E',
+  pYellow: '#FCC12F',
   pBlackTransp: 'rgba(51,51,51,0.8)',
 
 

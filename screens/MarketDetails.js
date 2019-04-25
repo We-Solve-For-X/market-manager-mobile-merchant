@@ -146,7 +146,7 @@ export default class MarketDetails extends React.Component {
           <View style={styles.divider}/>
           <LineView title={'Attendances'}    value={`${nAttendances}`}/>
           <View style={styles.divider}/>
-          <LineView title={'Payments'}    value={`${nInvPayed} Payed, ${nInvOuts} Outstanding, ${nInvSubm} Awaiting Review `}/>
+          <LineView title={'Payments'}    value={`${nInvPayed} Payed / ${nInvSubm} Submitted / ${nInvOuts} Outstanding `}/>
           <View style={styles.divider}/>
           <LineView title={'Market Code'}    value={unCode ? `${unCode}` : null}/>
           <View style={styles.divider}/>

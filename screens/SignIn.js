@@ -1,23 +1,20 @@
 import React from 'react';
 import { StyleSheet, View, ImageBackground, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
-import { NavigationEvents } from 'react-navigation'
-import { Constants } from 'expo'
 import imagesRef from '../assets/imagesRef'
 import { Button, } from "@shoutem/ui"
 import { Text, Title, Heading } from "@shoutem/ui"
-import { TextInput } from "@shoutem/ui"
+//import { TextInput } from "@shoutem/ui"
+import { TextInput } from "react-native-paper"
 import { connectStyle } from '@shoutem/theme'
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import axios from 'axios'
-import ViewLoad from "../components/common/ViewLoad";
+import ViewLoad from "../components/common/ViewLoad"
 //consts & comps
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
-import { signinAdmin } from "../networking/nm_sfx_auth";
-import { asSetProfile } from "../services/asyncStorage/asApi";
-
-const appVersion = Constants.manifest.version
+import { signinAdmin } from "../networking/nm_sfx_auth"
+import { asSetProfile } from "../services/asyncStorage/asApi"
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -59,21 +56,28 @@ class SignIn extends React.Component {
             </View>
 
             <View style={styles.textInCont}>
-              <TextInput
-                placeholder={'Email'}
-                onChangeText={(email) => this.setState({email})}
-                //style={styles.textInput}
-                maxLength={50}
-                value={email}
-              />
-              <TextInput
-                placeholder={'Password'}
-                onChangeText={(password) => this.setState({password})}
-                //style={styles.textInput}
-                maxLength={17}
-                value={password}
-                secureTextEntry
-              />
+            <TextInput
+              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+              mode={'flat'}
+              underlineColor={'white'}
+              selectionColor={'white'}
+              label='Username'
+              value={email}
+              maxLength={55}
+              onChangeText={(email) => this.setState({email})}
+            />
+             <TextInput
+              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+              mode={'flat'}
+              underlineColor={'white'}
+              selectionColor={'white'}
+              label='Password'
+              value={password}
+              maxLength={17}
+              secureTextEntry
+              onChangeText={(password) => this.setState({password})}
+            />
+
             </View>
 
             <View style={styles.signInCont}>

@@ -20,17 +20,17 @@ export default class CommunicCard extends React.PureComponent {
     const { topic, text, fromName, toName, createdAt } = message
     return (
       <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('CommunicationView', {message: message})}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+        <View style={styles.topView}>
           <Title style={styles.topic} numberOfLines={1}>{topic}</Title>
           <Text style={styles.time} numberOfLines={1}>{moment(createdAt).format("ddd Do MMM HH:mm")}</Text>
         </View>
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingVertical: 3}}>
+        <View style={styles.midView}>
           <Subtitle style={styles.from} numberOfLines={1}>{fromName}</Subtitle>
-          <Icon name="right-arrow" style={{color: colors.pWhite}}/>
+          <Icon name="right-arrow" style={styles.arrow}/>
         </View>
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4}}>
+        <View style={styles.botView}>
           <Text style={styles.desc} numberOfLines={2}>{text}</Text>
         </View>
       </TouchableOpacity>
@@ -50,6 +50,29 @@ const styles = StyleSheet.create({
       padding: 8,
       borderRadius: 5
     },
+    topView: {
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      width: '100%'
+    },
+    midView: {
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      width: '100%', 
+      paddingVertical: 3
+    },
+    botView: {
+      flexDirection: 'row', 
+      justifyContent: 'flex-start',
+      alignItems: 'center', 
+      width: '100%', 
+      marginBottom: 4
+    },
+    arrow: {
+      color: colors.pWhite
+    },
     topic: {
       ...styleConsts.textOne,
       color: colors.pWhite
@@ -60,7 +83,7 @@ const styles = StyleSheet.create({
     }, 
     from: {
       ...styleConsts.textTwo,
-      color: colors.pWhite
+      color: colors.pYellow
     }, 
     desc: {
       ...styleConsts.textThree,

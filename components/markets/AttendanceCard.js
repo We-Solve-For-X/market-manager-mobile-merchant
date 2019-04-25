@@ -50,22 +50,25 @@ export default class AttendanceCard extends React.PureComponent {
 
             <ViewSwitch hide={isCreate}>
               <View>
-                <Text style={styles.textSub}>{`R${invoice ? invoice.amount : null} - ${invoice ? invoice.status : null}`}</Text>
-                <Text style={styles.textSub}>{`Refference: ${invoice ? invoice.refNum : null}`}</Text>
+                <Text>
+                <Text style={styles.textSub}>{`R${invoice ? invoice.amount : null}`}</Text>
+                <Text style={{fontSize: 13, fontWeight: 'bold', paddingVertical: 2, color: invoice.status == 'paid' ? colors.pGreen : invoice.status == 'submitted' ? colors.pBlue : colors.pRed}}>{` - ${invoice ? invoice.status : null}`}</Text>
+                </Text>
+                 <Text style={{fontSize: 13, fontWeight: 'bold', paddingVertical: 2, color: colors.pYellow}}>{`Refference: ${invoice ? invoice.refNum : null}`}</Text>
               </View>
             </ViewSwitch>
             
           </View>
 
           <TouchableOpacity 
-            style={{marginHorizontal: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: '100%'}} 
+            style={styles.expCont} 
             onPress={() => this.setState({isExpanded: !isExpanded})}>
-            <View style={{height: '87%', width: 1, backgroundColor: colors.pWhite}}/>
-            <MaterialCommunityIcons name="dots-horizontal" size={25} style={{color: colors.pWhite, marginHorizontal: 20}}/>
+            <View style={styles.expView}/>
+            <MaterialCommunityIcons name="dots-horizontal" size={25} style={styles.expIcon}/>
           </TouchableOpacity>
         </View>
 
-        <ViewSwitch hide={!isExpanded} style={{width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', paddingVertical: 4, backgroundColor: colors.primary, borderBottomLeftRadius: 3, borderBottomRightRadius: 3}}>
+        <ViewSwitch hide={!isExpanded} style={styles.expMainCont}>
           {this._renderExpand(isCreate, merchant.id, invoice ? invoice.status : null)}
         </ViewSwitch>
       </View>
@@ -75,9 +78,9 @@ export default class AttendanceCard extends React.PureComponent {
   _renderExpand = (isCreate = false, merchId = '', invStatus = '') => {
     if(isCreate){
       return(
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: '95%'}}>
+        <View style={styles.expTopView}>
           <View>
-            <Button style={{marginVertical: 10, marginHorizontal: 15, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this.props.removeAttendance(merchId)}>
+            <Button style={styles.buttonA} onPress={() => this.props.removeAttendance(merchId)}>
               <Text>REMOVE</Text>
               <Ionicons name="md-remove" size={22} />
             </Button>
@@ -106,7 +109,7 @@ export default class AttendanceCard extends React.PureComponent {
           </View>
 
           <ViewSwitch hide={this.state.paymentMethod == null}>
-            <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
+            <View style={styles.inputView}>
               <TextInput
                 placeholder={'Amount'}
                 onChangeText={(amount) => {this.setState({amount})}}
@@ -122,7 +125,7 @@ export default class AttendanceCard extends React.PureComponent {
                 maxLength={250}
                 value={this.state.paymentComment}
               />
-              <Button style={{marginVertical: 10, marginHorizontal: 5, borderColor: colors.secondary, ...styleConsts.buttonBorder}} onPress={() => this.state.submitting ? null : this._submitPayment()}>
+              <Button style={styles.buttonA} onPress={() => this.state.submitting ? null : this._submitPayment()}>
                 <Text>SUBMIT</Text>
                 {this.state.submitting ? <ActivityIndicator/> : <AntDesign name="check" size={23} />}
               </Button>
@@ -132,12 +135,12 @@ export default class AttendanceCard extends React.PureComponent {
           <View style={styles.divider}/>
         </ViewSwitch>
 
-        <View style={{height: 1, width: '96%', backgroundColor: colors.pWhite}}/>
+        <View style={styles.div2}/>
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: '99%'}}>
+        <View style={styles.remView}>
           { this.state.verifyRemove ? 
           (
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <View style={styles.remViewIn}>
             <Button 
               style={styleConsts.button} 
               onPress={() => this._removeAttendance()}>
@@ -249,6 +252,12 @@ const styles = StyleSheet.create({
       // paddingVertical: 4,
       borderRadius: 3
     },
+    buttonA: {
+      marginVertical: 10, 
+      marginHorizontal: 15, 
+      borderColor: colors.secondary, 
+      ...styleConsts.buttonBorder
+    },
     topBox: {
       width: '100%',
       //height: 100,
@@ -261,17 +270,69 @@ const styles = StyleSheet.create({
       paddingVertical: 7,
       //borderRadius: 3
     },
+    expCont: {
+      marginHorizontal: 5, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      height: '100%'
+    },
+    div2: {
+      height: 1, 
+      width: '96%', 
+      backgroundColor: colors.pWhite
+    },
+    expView: {
+      height: '87%', 
+      width: 1, 
+      backgroundColor: colors.pWhite
+    },
+    expIcon: {
+      color: colors.pWhite, 
+      marginHorizontal: 20
+    },
+    expTopView: {
+      flexDirection: 'row', 
+      justifyContent: 'flex-end', 
+      alignItems: 'center', 
+      width: '95%'
+    },
+    expMainCont: {
+      width: '100%', 
+      flexDirection: 'column', 
+      justifyContent: 'flex-start', 
+      alignItems: 'center', 
+      paddingVertical: 4, 
+      backgroundColor: colors.primary, 
+      borderBottomLeftRadius: 3, 
+      borderBottomRightRadius: 3
+    },
     textMain: {
       fontSize: 18,
       fontWeight: 'bold',
       color: colors.pWhite,
       paddingVertical: 3
     },
+    remView: {
+      flexDirection: 'row', 
+      justifyContent: 'flex-end', 
+      alignItems: 'center', 
+      width: '99%'
+    },
     textSub: {
       fontSize: 13,
       fontWeight: 'bold',
       color: colors.pWhite,
       paddingVertical: 2
+    },
+    textBase: {
+      fontSize: 13,
+      fontWeight: 'bold',
+      paddingVertical: 2
+    },
+    remViewIn: {
+      flexDirection: 'row', 
+      justifyContent: 'center'
     },
     divider: {
       width: '100%', 
@@ -294,4 +355,10 @@ const styles = StyleSheet.create({
       width: '50%',
       color: colors.pWhite
     },
+    inputView: {
+      flexDirection: 'column', 
+      justifyContent: 'flex-start', 
+      alignItems: 'flex-start', 
+      width: '100%'
+    }
   })

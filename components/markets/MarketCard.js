@@ -21,15 +21,15 @@ export default class MarketCard extends React.PureComponent {
     return (
       <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('MarketDetails', {id: id})} >
       
-      <View style={{borderRadius: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: colors.secondary, padding: 8}}>
+      <View style={styles.inContainer}>
         <View >
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+          <View style={styles.dateText}>
             <Title style={styles.date} numberOfLines={1}>{moment(marketStart).format("dddd Do MMM YYYY")}</Title>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4, marginTop: 5}}>
+          <View style={styles.subText}>
             <Text style={styles.name} numberOfLines={2}>{name}</Text>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 4, marginTop: 1}}>
+          <View style={styles.codeView}>
             <Text style={styles.code} numberOfLines={2}>{unCode}</Text>
           </View>
         </View>
@@ -53,6 +53,37 @@ const styles = StyleSheet.create({
       // paddingVertical: 5,
       borderRadius: 5
     },
+    inContainer: {
+      borderRadius: 3, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      width: '100%', 
+      backgroundColor: colors.secondary, 
+      padding: 8
+    },
+    dateText: {
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      width: '100%'
+    },
+    subText: {
+      flexDirection: 'row', 
+      justifyContent: 'flex-start', 
+      alignItems: 'center', 
+      width: '100%', 
+      marginBottom: 4, 
+      marginTop: 5
+    },
+    codeView: {
+      flexDirection: 'row', 
+      justifyContent: 'flex-start', 
+      alignItems: 'center', 
+      width: '100%', 
+      marginBottom: 4, 
+      marginTop: 1
+    },
     date: {
       ...styleConsts.textOne,
       color: colors.pWhite
@@ -63,7 +94,7 @@ const styles = StyleSheet.create({
     }, 
     code: {
       ...styleConsts.textThree,
-      color: colors.pWhite
+      color: colors.pYellow
     }, 
     paidY: {
       ...styleConsts.textTwo,

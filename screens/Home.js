@@ -18,7 +18,8 @@ import LineView from "../components/common/LineView"
 //API
 import { overview, updateAdministrator, updatePriceZones } from "../networking/nm_sfx_home"
 import { changePassword } from "../networking/nm_sfx_auth"
-import ErrorLine from '../components/common/ErrorLine';
+import ErrorLine from '../components/common/ErrorLine'
+import { asClearProfile } from "../services/asyncStorage/asApi"
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -272,7 +273,7 @@ export default class Home extends React.Component {
         pbErrorMessage: null,
         loading: false
       })
-      //await this._fetchData() 
+      await this._fetchData(true) 
     } else {
       await this.setState({
         pbErrorMessage: response.data,
@@ -303,7 +304,7 @@ export default class Home extends React.Component {
         patchErrorMessage: null,
         loading: false
       })
-      //await this._fetchData() 
+      await this._fetchData(true) 
     } else {
       await this.setState({
         patchErrorMessage: response.data,
@@ -342,13 +343,15 @@ export default class Home extends React.Component {
     }
   }
 
-  _signOutAsync = () => {
-    //this.setState({ loadSignOut: true })
+  _signOutAsync = async () => {
+    await this.setState({ loadSignOut: true })
+    await asClearProfile()
+    await this.setState({ loadSignOut: false })
     this.props.navigation.navigate('SignIn')
   }
 
-  _fetchData = async () => {
-    await this.setState({ loading: true })
+  _fetchData = async (silent = false) => {
+    if(silent){ null } else { await this.setState({ loading: true }) }
     let adminId = this.state.administratorId
     let response = await overview(HostID, adminId, this.signal.token)
     if (response.code == 200) {

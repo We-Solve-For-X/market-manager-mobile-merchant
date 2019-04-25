@@ -64,7 +64,6 @@ export async function asMultiGet (keys = []) {
 }
 
 export async function asSetProfile(profile = {}, username = ''){
-    console.log(profile)
     let uname = [ProfileCnsts.username, username]
     let name = [ProfileCnsts.name, profile.name]
     let surname = [ProfileCnsts.surname, profile.surname]
@@ -74,6 +73,18 @@ export async function asSetProfile(profile = {}, username = ''){
 
     res = await asMultiSet([uname, name, surname, email, role, id])
     return res
+}
+
+export async function asClearProfile(){
+  let uname = [ProfileCnsts.username, '']
+  let name = [ProfileCnsts.name, '']
+  let surname = [ProfileCnsts.surname, '']
+  let email = [ProfileCnsts.email, '']
+  let role = [ProfileCnsts.role, '']
+  let id = [ProfileCnsts.adminstId, '']
+
+  res = await asMultiSet([uname, name, surname, email, role, id])
+  return res
 }
 
 // export async function asGetProfile(profile = {}, username = ''){
