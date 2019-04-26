@@ -82,30 +82,30 @@ export default class Home extends React.Component {
     const { pbLoading, pbErrorMessage, priceB1_key, priceB1_name, priceB1_cost, priceB2_key, priceB2_name, priceB2_cost, priceB3_key, priceB3_name, priceB3_cost, priceB4_key, priceB4_name, priceB4_cost } = this.state
 
     return (
-      <View style={styles.container}>
-      <ScrollView refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={() => this._fetchData()}
-            />
-          } contentContainerStyle={styles.scrollContainer}>
-          
+    <View style={styles.container}>
+      <ScrollView 
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => this._fetchData()}
+          />} 
+        contentContainerStyle={styles.scrollContainer}>
         <ErrorLine errorMessage={errorMessage}/>
 
         <ViewSwitch style={styles.dataCardTop} hide={!pName}>
-          <Heading>Hi, {pName}.</Heading>
-          <Subtitle>Welcome to Irene Market Manager</Subtitle>
+          <Heading style={styles.topHeadTxt}>Hi, {pName}.</Heading>
+          <Subtitle style={styles.topSubTxt}>Welcome to Irene Market Manager</Subtitle>
         </ViewSwitch>
 
-        <View style={styles.dataCard}>
+        <ViewSwitch style={styles.dataCard} hide={!paymentsTxt}>
           <Heading>Payments</Heading>
           <Subtitle>{paymentsTxt}</Subtitle>
-        </View>
+        </ViewSwitch>
 
-        <View style={styles.dataCard}>
+        <ViewSwitch style={styles.dataCard} hide={!merchantsTxt}>
           <Heading>Merchants</Heading>
           <Subtitle>{merchantsTxt}</Subtitle>
-        </View>
+        </ViewSwitch>
 
         <View style={styles.dataCard}>
           <Heading >Host Details</Heading>
@@ -233,7 +233,7 @@ export default class Home extends React.Component {
           <Button 
             style={styles.button} 
             onPress={() => loadSignOut ? null : this._signOutAsync()}>
-            <Text>Sign Out</Text>
+            <Text>SIGN OUT</Text>
             <ViewLoad hide={loadSignOut}>
               <AntDesign name="logout" size={22} />
             </ViewLoad>
@@ -408,8 +408,14 @@ const styles = StyleSheet.create({
     padding: 5, 
     borderRadius: 5, 
     width: '100%', 
-    backgroundColor: colors.pGrey, 
+    backgroundColor: colors.secondary, 
     ...styleConsts.viewShadow
+  },
+  topHeadTxt: {
+    color: colors.pWhite
+  },
+  topSubTxt: {
+    color: colors.pYellow
   },
   dataCard: { 
     margin: 10, 

@@ -1,27 +1,40 @@
 {
   "expo": {
-    "name": "marketManager-admin-mobile",
+    "name": "Irene Market Manager (admin)",
     "description": "A very interesting project.",
-    "slug": "marketManager-admin-mobile",
+    "slug": "marketmanager-irene-admin-mobile",
     "privacy": "public",
     "sdkVersion": "31.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": ["ios"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "primaryColor": "#404A58",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.solveforx.marketmanager",
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
     }
   }
 }
+
+

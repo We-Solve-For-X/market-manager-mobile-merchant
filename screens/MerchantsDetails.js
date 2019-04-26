@@ -9,9 +9,9 @@ import axios from 'axios'
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
-import { merchant1 } from "../networking/stubs";
-import { activate, deactivate, getMerch, updatePriceZone } from "../networking/nm_sfx_merchants";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { merchant1 } from "../networking/stubs"
+import { activate, deactivate, getMerch, updatePriceZone } from "../networking/nm_sfx_merchants"
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 
 export default class MerchantsDetails extends React.Component {
   constructor(props){
@@ -50,9 +50,9 @@ export default class MerchantsDetails extends React.Component {
         <View style={styles.topBox}>
           <EvilIcons name="cart" size={60} style={{marginLeft: 10}}/>
           <View style={styles.topBoxFields}>
-            <Text style={styles.text1} >{name ? name : null}</Text>
-            <Text style={styles.text2}>{legalName ? legalName : '(no legal name)'}</Text>
-            <Text style={styles.text3}>{description ? description : null}</Text>
+            <Text style={styles.text1t} >{name ? name : null}</Text>
+            <Text style={styles.text2t}>{legalName ? legalName : '(no legal name)'}</Text>
+            <Text style={styles.text3t}>{description ? description : null}</Text>
           </View>
         </View>
 
@@ -231,7 +231,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'flex-start', 
     alignItems: 'center', 
-    width: '100%'
+    width: '100%',
+    backgroundColor: colors.secondary,
+    paddingVertical: 3,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8
   },
   topBoxFields: {
     flexDirection: 'column', 
@@ -288,6 +292,24 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     flexDirection: 'row',
     justifyContent: 'flex-start'
+  },
+  text1t: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.pWhite,
+    paddingVertical: 2
+  },
+  text2t: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: colors.pWhite,
+    paddingVertical: 2
+  },
+  text3t: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.pWhite,
+    paddingVertical: 2
   },
   text1: {
     fontSize: 20,

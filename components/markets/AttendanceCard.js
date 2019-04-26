@@ -39,7 +39,7 @@ export default class AttendanceCard extends React.PureComponent {
     const { isExpanded, removing} = this.state
     const { id, merchant, invoice} = attendance
     const { isActive, repName, repSurname, name, description, priceZone, standId } = merchant
-
+    let invStatus = invoice ? invoice.status : 'none'
     return (
       <View style={styles.container}>
         <View style={styles.topBox} onPress={() => this.setState({isExpanded: !isExpanded})}>
@@ -52,7 +52,7 @@ export default class AttendanceCard extends React.PureComponent {
               <View>
                 <Text>
                 <Text style={styles.textSub}>{`R${invoice ? invoice.amount : null}`}</Text>
-                <Text style={{fontSize: 13, fontWeight: 'bold', paddingVertical: 2, color: invoice.status == 'paid' ? colors.pGreen : invoice.status == 'submitted' ? colors.pBlue : colors.pRed}}>{` - ${invoice ? invoice.status : null}`}</Text>
+                <Text style={{fontSize: 13, fontWeight: 'bold', paddingVertical: 2, color: invStatus == 'paid' ? colors.pGreen : invStatus == 'submitted' ? colors.pBlue : colors.pRed}}>{` - ${invoice ? invoice.status : null}`}</Text>
                 </Text>
                  <Text style={{fontSize: 13, fontWeight: 'bold', paddingVertical: 2, color: colors.pYellow}}>{`Refference: ${invoice ? invoice.refNum : null}`}</Text>
               </View>
