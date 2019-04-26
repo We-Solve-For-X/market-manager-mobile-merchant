@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, Easing, Animated, Text } from 'react-native'
+import { Easing, Animated } from 'react-native'
 import { createStackNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import SignIn from '../screens/SignIn'

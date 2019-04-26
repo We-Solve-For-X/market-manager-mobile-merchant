@@ -1,9 +1,6 @@
 import React from 'react'
-import { ActivityIndicator } from "react-native";
-import PropTypes from 'prop-types';
-import {
-  View,
-} from 'react-native';
+import { ActivityIndicator } from "react-native"
+import { View } from 'react-native'
 
 const ViewLoad = (props) => {
   const { children, hide, style } = props;

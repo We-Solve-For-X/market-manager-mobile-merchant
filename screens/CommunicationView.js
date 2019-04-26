@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native'
 import ButtonFloat from '../components/common/ButtonFloat'
-import { Text, TextInput } from '@shoutem/ui'
+import { TextInput } from '@shoutem/ui'
 import colors from '../constants/colors'
 import LineView from "../components/common/LineView"
 
@@ -41,7 +41,7 @@ export default class CommunicationView extends React.Component {
             editable={false}
           />
         </View>
-        
+
         <ButtonFloat navigation={navigation}/>
       </View>
     )

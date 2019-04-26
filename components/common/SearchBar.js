@@ -1,7 +1,6 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { TextInput } from "@shoutem/ui"
-//import Icon from '../icons/icons'
 //  Config
 import layout from '../../constants/layout'
 import colors from '../../constants/colors'

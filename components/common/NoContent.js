@@ -2,7 +2,6 @@ import React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { NavigationBar, Text } from "@shoutem/ui"
 import { Title } from "@shoutem/ui"
-//import Icon from '../icons/icons'
 //  Config
 import layout from '../../constants/layout'
 import colors from '../../constants/colors'
