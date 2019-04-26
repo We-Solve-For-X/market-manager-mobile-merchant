@@ -21,7 +21,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/images/**"
     ],
     "ios": {
       "bundleIdentifier": "com.solveforx.marketmanager",
@@ -36,5 +36,3 @@
     }
   }
 }
-
-
