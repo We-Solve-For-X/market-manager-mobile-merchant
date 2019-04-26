@@ -12,11 +12,9 @@ const LineView = ({title, value}) => {
         <View style={styles.lineViewText}>
           <Text>{value}</Text>
         </View>
-        
       </View>
     )
   }
-
 
 const styles = StyleSheet.create({
     lineContainer: {

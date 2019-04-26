@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import colors from '../constants/colors'
-import { isTablet } from "../constants/platform";
+import { isTablet } from "../constants/platform"
 
 export default styleConsts = StyleSheet.create({
     buttonBorder: {

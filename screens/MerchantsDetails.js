@@ -48,7 +48,7 @@ export default class MerchantsDetails extends React.Component {
       <View style={styles.container}>
 
         <View style={styles.topBox}>
-          <EvilIcons name="cart" size={60} style={{marginLeft: 10}}/>
+          <EvilIcons name="cart" size={60} style={styles.cIcon}/>
           <View style={styles.topBoxFields}>
             <Text style={styles.text1t} >{name ? name : null}</Text>
             <Text style={styles.text2t}>{legalName ? legalName : '(no legal name)'}</Text>
@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   topBox: {
+    width: '100%',
     flexDirection: 'row', 
     justifyContent: 'flex-start', 
     alignItems: 'center', 
@@ -238,6 +239,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8
   },
   topBoxFields: {
+    flex: 1,
     flexDirection: 'column', 
     justifyContent: 'center', 
     alignItems: 'flex-start', 
@@ -333,4 +335,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.pWhite
   },
+  cIcon: {
+    marginLeft: 10
+  }
 });

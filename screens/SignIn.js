@@ -15,6 +15,7 @@ import layout from '../constants/layout'
 //API
 import { signinAdmin } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
+import { isTablet } from "../constants/platform"
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -22,8 +23,8 @@ class SignIn extends React.Component {
     this.state = {
       signingIn: false,
       errorMessage: null,
-      password: 'myword',
-      email: 'merts.ms@gmail.com'
+      password: '',
+      email: ''
     }
     this.signal = axios.CancelToken.source()
   }
@@ -50,9 +51,9 @@ class SignIn extends React.Component {
           <View style={styles.subCont}>
             
             <View style={styles.headingCont}>
-              <Text style={styles.title}>Irene Village Market</Text>
+              <Text style={styles.title}>Market Manager</Text>
               <FontAwesome name="shopping-basket" size={50} style={styles.logoMain}/>
-              <Text style={styles.subTitle}>Market Manager</Text>
+              <Text style={styles.subTitle}>Irene Village Market</Text>
             </View>
 
             <View style={styles.textInCont}>
@@ -77,7 +78,6 @@ class SignIn extends React.Component {
               secureTextEntry
               onChangeText={(password) => this.setState({password})}
             />
-
             </View>
 
             <View style={styles.signInCont}>
@@ -94,7 +94,7 @@ class SignIn extends React.Component {
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
-    );
+    )
   }
 
   _signInAsync = async () => {
@@ -174,11 +174,11 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   title: {
-    fontSize: 38, 
+    fontSize: isTablet ? 38 : 25, 
     color: colors.pWhite
   },
   subTitle: {
-    fontSize: 30, 
+    fontSize: isTablet ? 30 : 20, 
     color: colors.pWhite
   },
   textInCont: {

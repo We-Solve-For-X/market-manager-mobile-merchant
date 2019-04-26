@@ -445,7 +445,8 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10, 
     marginHorizontal: 15, 
-    ...styleConsts.buttonBorder, width: 115
+    ...styleConsts.buttonBorder, 
+    width: 115
   },
   errorText: {
     marginHorizontal: 17, 

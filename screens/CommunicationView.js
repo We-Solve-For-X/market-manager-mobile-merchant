@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import ButtonFloat from '../components/common/ButtonFloat'
 import { Text, TextInput } from '@shoutem/ui'
 import colors from '../constants/colors'
+import LineView from "../components/common/LineView"
 
 export default class CommunicationView extends React.Component {
   constructor(props){
@@ -22,42 +23,13 @@ export default class CommunicationView extends React.Component {
 
     return (
       <View style={styles.container}>
+
         <View style={styles.topFields}>
-          <View style={styles.lineContainer}>
-            <View style={styles.titleBox}>
-              <Text>From: </Text>
-            </View>
-            <TextInput
-              style={styles.textInput}
-              defaultValue={fromName}
-              editable={false}
-            />
-          </View>
+          <LineView title={'From'}            value={fromName}/>
           <View style={styles.divider}/>
-
-          <View style={styles.lineContainer}>
-            <View style={styles.titleBox}>
-              <Text>To: </Text>
-            </View>
-            <TextInput
-              style={styles.textInput}
-              defaultValue={description}
-              editable={false}
-            />
-          </View>
+          <LineView title={'To'}            value={description}/>
           <View style={styles.divider}/>
-
-          <View style={styles.lineContainer}>
-            <View style={styles.titleBox}>
-              <Text>Topic: </Text>
-            </View>
-            <TextInput
-              style={styles.textInput}
-              defaultValue={topic}
-              editable={false}
-            />
-          </View>
-
+          <LineView title={'Topic'}            value={topic}/>
           <View style={styles.divider}/>
         </View>
 
@@ -69,6 +41,7 @@ export default class CommunicationView extends React.Component {
             editable={false}
           />
         </View>
+        
         <ButtonFloat navigation={navigation}/>
       </View>
     )
