@@ -16,10 +16,10 @@ export default class CommunicCard extends React.PureComponent {
 
 
   render() {
-    const { navigation, message } = this.props
+    const { doNavigate, message } = this.props
     const { topic, text, fromName, toName, createdAt } = message
     return (
-      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('CommunicationView', {message: message})}>
+      <TouchableOpacity style={styles.container} onPress={() => doNavigate()}>
         <View style={styles.topView}>
           <Title style={styles.topic} numberOfLines={1}>{topic}</Title>
           <Text style={styles.time} numberOfLines={1}>{moment(createdAt).format("ddd Do MMM HH:mm")}</Text>

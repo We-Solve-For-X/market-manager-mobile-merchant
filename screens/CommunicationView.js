@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native'
+import axios from 'axios'
 import ButtonFloat from '../components/common/ButtonFloat'
-import { TextInput } from '@shoutem/ui'
+import { TextInput, Button, Text } from '@shoutem/ui'
 import colors from '../constants/colors'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import LineView from "../components/common/LineView"
+import ViewLoad from "../components/common/ViewLoad"
+import { deleteMessage } from "../networking/nm_sfx_communication"
+import { systemAlert } from "../services/systemAlerts"
 
 export default class CommunicationView extends React.Component {
   constructor(props){
@@ -13,13 +18,20 @@ export default class CommunicationView extends React.Component {
       toName: '',
       topic: '',
       text: '',
+      deleting: false
     }
+    this.signal = axios.CancelToken.source()
+  }
+
+  componentWillUnmount() {
+    this.signal.cancel('API request canceled due to componentUnmount')
   }
 
   render() {
+    const { deleting } = this.state
     const { navigation } = this.props
     const message = navigation.getParam('message', {none: 'none'});
-    const { topic, text, fromName, description } = message
+    const { topic, text, fromName, description, id } = message
 
     return (
       <View style={styles.container}>
@@ -31,6 +43,16 @@ export default class CommunicationView extends React.Component {
           <View style={styles.divider}/>
           <LineView title={'Topic'}            value={topic}/>
           <View style={styles.divider}/>
+          <View style={styles.buttonContainer}>
+            <Button 
+              style={styles.sendButton} 
+              onPress={() => {deleting ? null : this._deleteMessage(id)}}>
+              <Text>DELETE</Text>
+              <ViewLoad hide={(deleting)}>
+                <MaterialCommunityIcons name="delete-outline" size={22} />
+              </ViewLoad>
+            </Button>
+          </View>
         </View>
 
         <View style={styles.messageContainer}>
@@ -55,6 +77,18 @@ export default class CommunicationView extends React.Component {
       topic,
       text,
     })
+  }
+
+  _deleteMessage = async (id = '') => {
+    this.setState({deleting: true})
+    const response = await deleteMessage(id, this.signal.token)
+    if (response.code == 200) {
+      this.setState({deleting: false})
+      this.props.navigation.goBack()
+    } else {
+      this.setState({deleting: false})
+      systemAlert('Error', 'Unable to delete this message. Please inform support.')
+    }
   }
 
   static navigationOptions = {
@@ -89,6 +123,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'flex-start', 
     alignItems: 'center'
+  },
+  buttonContainer: {
+    width: '100%', 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  },
+  sendButton: {
+    marginVertical: 10, 
+    marginHorizontal: 15, 
+    ...styleConsts.buttonBorder, width: 115
   },
   divider: {
     width: '98%', 

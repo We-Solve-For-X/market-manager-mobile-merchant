@@ -71,7 +71,10 @@ export default class Communication extends React.Component {
   _renderMessage = (message) => {
     const navigation = this.props.navigation
     return (
-      <CommunicCard navigation={navigation} message={message}/>
+      <CommunicCard doNavigate={async () => {
+        await this.setState({shouldRefresh: true})
+        navigation.navigate('CommunicationView', {message: message}) }} 
+        message={message}/>
       )
   }
 

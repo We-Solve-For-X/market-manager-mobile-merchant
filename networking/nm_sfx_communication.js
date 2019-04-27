@@ -23,3 +23,11 @@ export async function sendMessage(mesg = {}, token) {
     
     return packageResponse(packDataPromise)
 }
+
+export async function deleteMessage(id = '', token) {
+    //Will be changed to a post soon
+    const url =  MARKMAN_BASE_URL + `/messages/administrator/${id}/delete`
+    const packDataPromise = post(url, {}, token)
+    
+    return packageResponse(packDataPromise)
+}
