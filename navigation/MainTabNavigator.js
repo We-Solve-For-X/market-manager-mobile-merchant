@@ -5,13 +5,10 @@ import colors from '../constants/colors'
 import { isTablet } from "../constants/platform"
 import { MaterialCommunityIcons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import Home from '../screens/Home'
-import Markets from '../screens/Markets'
-import MarketDetails from '../screens/MarketDetails'
-import MarketAdd from '../screens/MarketAdd'
+import Attendances from '../screens/Attendances'
+import AttendanceDetails from '../screens/AttendanceDetails'
 import Merchants from '../screens/Merchants'
-import MerchantsDetails from '../screens/MerchantsDetails'
 import Communication from '../screens/Communication'
-import CommunicationNew from '../screens/CommunicationNew'
 import CommunicationView from '../screens/CommunicationView'
 import HeaderScreen from '../components/common/HeaderScreen'
 
@@ -25,12 +22,11 @@ HomeStack.navigationOptions = {
   )
 }
 
-const MarketsStack = createStackNavigator({
-  Markets: Markets,
-
+const AttendancesStack = createStackNavigator({
+  Attendances: Attendances,
 })
-MarketsStack.navigationOptions = {
-  tabBarLabel: 'Markets',
+AttendancesStack.navigationOptions = {
+  tabBarLabel: 'Attendances',
   tabBarIcon: ({ tintColor }) => (
     <AntDesign name="shoppingcart" size={22} color={colors.pWhite}/>
   )
@@ -73,8 +69,7 @@ const PrimaryNavConfig = {
 }
 const MainTabNav = createMaterialTopTabNavigator({
   HomeStack,
-  MarketsStack,
-  MerchantsStack,
+  AttendancesStack,
   CommunicationStack
 }, PrimaryNavConfig)
 
@@ -103,40 +98,13 @@ const MainStack = createStackNavigator({
       headerBackTitle: null
     }),
   },
-  //MainTabNav: MainTabNav,
-  MerchantsDetails: {
-    screen: MerchantsDetails,
-    navigationOptions: () => ({
-      title: `Merchants Details`,
-      header: (<HeaderScreen title={'Merchant Details'}/>),
-      headerBackTitle: null
-    }),
-  },
   //MerchantsDetails: MerchantsDetails,
   //MarketDetails: MarketDetails,
-  MarketDetails: {
-    screen: MarketDetails,
+  AttendanceDetails: {
+    screen: AttendanceDetails,
     navigationOptions: () => ({
-      title: `Market Details`,
-      header: (<HeaderScreen title={'Market Details'}/>),
-      headerBackTitle: null
-    }),
-  },
-  //MarketAdd: MarketAdd,
-  MarketAdd: {
-    screen: MarketAdd,
-    navigationOptions: () => ({
-      title: `Add Market`,
-      header: (<HeaderScreen title={'Create New Market'}/>),
-      headerBackTitle: null
-    }),
-  },
-  //CommunicationNew: CommunicationNew,
-  CommunicationNew: {
-    screen: CommunicationNew,
-    navigationOptions: () => ({
-      title: `New Message`,
-      header: (<HeaderScreen title={'New Message'}/>),
+      title: `Attendance Details`,
+      header: (<HeaderScreen title={'Attendance Details'}/>),
       headerBackTitle: null
     }),
   },

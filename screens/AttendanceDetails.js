@@ -21,7 +21,7 @@ import { HostID } from "../config/env"
 //API
 import { view, loadAdd, deleteMarket } from "../networking/nm_sfx_markets"
 
-export default class MarketDetails extends React.Component {
+export default class AttendanceDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -81,6 +81,7 @@ export default class MarketDetails extends React.Component {
               />
             }
           >
+          {/* Add Merchant Details Screen Content Here */}
           <SearchBar
             placeholder={'Find a Merchant'} 
             onChangeText={ (input) => this._applyModalSearch(input)}

@@ -108,8 +108,8 @@ export default class Home extends React.Component {
         </ViewSwitch>
 
         <View style={styles.dataCard}>
-          <Heading >Host Details</Heading>
-          <Subtitle>Irene Market's Information:</Subtitle>
+          <Heading >Your Host's Details</Heading>
+          <Subtitle>Irene Market Information:</Subtitle>
           <View style={styles.divider}/>
           <LineView title={'Name'}            value={host.name}/>
           <View style={styles.divider}/>
@@ -125,8 +125,8 @@ export default class Home extends React.Component {
         </View>
 
         <View style={styles.dataCard}>
-          <Heading>Bank Account Details</Heading>
-          <Subtitle>Bank Account Into Which Merchants Should Make Their Payments:</Subtitle>
+          <Heading>Host Bank Account</Heading>
+          <Subtitle>Bank Account Into Which Payments Must Be Made:</Subtitle>
           <View style={styles.divider}/>
           <LineView title={'Bank'}          value={host.bankAccount ? `${host.bankAccount.bankName}` : null}/>
           <View style={styles.divider}/>
@@ -142,43 +142,8 @@ export default class Home extends React.Component {
         </View>
 
         <View style={styles.dataCard}>
-          <Heading>Price Zones</Heading>
-          <Subtitle>Assignable Price Zone Descriptions and Cost:</Subtitle>
-          <View style={styles.divider}/>
-          <Subtitle> Price Zone A:</Subtitle>
-          <LineInput title={'Description'}  value={priceB1_name} onChange={(priceB1_name) => this.setState({priceB1_name})}/>
-          <LineInput title={'Cost'}         value={`${priceB1_cost}`} onChange={(priceB1_cost) => this.setState({priceB1_cost})}/>
-          <View style={styles.divider}/>
-          <Subtitle> Price Zone B:</Subtitle>
-          <LineInput title={'Description'}  value={priceB2_name} onChange={(priceB2_name) => this.setState({priceB2_name})}/>
-          <LineInput title={'Cost'}         value={`${priceB2_cost}`} onChange={(priceB2_cost) => this.setState({priceB2_cost})}/>
-          <View style={styles.divider}/>
-          <Subtitle> Price Zone C:</Subtitle>
-          <LineInput title={'Description'}  value={priceB3_name} onChange={(priceB3_name) => this.setState({priceB3_name})}/>
-          <LineInput title={'Cost'}         value={`${priceB3_cost}`} onChange={(priceB3_cost) => this.setState({priceB3_cost})}/>
-          <View style={styles.divider}/>
-          <Subtitle> Price Zone D:</Subtitle>
-          <LineInput title={'Description'}  value={priceB4_name} onChange={(priceB4_name) => this.setState({priceB4_name})}/>
-          <LineInput title={'Cost'}         value={`${priceB4_cost}`} onChange={(priceB4_cost) => this.setState({priceB4_cost})}/>
-          <View style={styles.divider}/>
-          <ViewSwitch hide={pbErrorMessage == null}>
-              <Text style={styles.errorText}>{pbErrorMessage}</Text>
-          </ViewSwitch>
-          <View style={styles.buttonContainer}>
-          <Button 
-            style={styles.button} 
-            onPress={() => pbLoading ? null : this._updatePriceBrackets()}>
-            <Text>UPDATE</Text>
-            <ViewLoad hide={pbLoading}>
-              <AntDesign name="clouduploado" size={22} />
-            </ViewLoad>
-          </Button>   
-          </View> 
-        </View>
-
-        <View style={styles.dataCard}>
-          <Heading>Administrator Details</Heading>
-          <Subtitle>Your User Profile Information:</Subtitle>
+          <Heading>Merchant Details</Heading>
+          <Subtitle>Your Business and User Profile Information:</Subtitle>
           <View style={styles.divider}/>
           <LineInput title={'Name'}     value={pName} onChange={(pName) => this.setState({pName})}/>
           <View style={styles.divider}/>

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Irene Market Manager (admin)",
+    "name": "Irene Market Manager",
     "description": "A very interesting project.",
-    "slug": "marketmanager-irene-admin-mobile",
+    "slug": "marketmanager-irene-merchant-mobile",
     "privacy": "public",
     "sdkVersion": "31.0.0",
     "platforms": ["ios"],
@@ -24,7 +24,7 @@
       "assets/images/**"
     ],
     "ios": {
-      "bundleIdentifier": "com.solveforx.marketmanager",
+      "bundleIdentifier": "com.solveforx.marketmanager.merchant",
       "supportsTablet": true,
       "buildNumber": "1.0.0",
       "infoPlist": {

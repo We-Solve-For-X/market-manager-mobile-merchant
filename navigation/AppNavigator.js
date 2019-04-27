@@ -3,10 +3,13 @@ import { Easing, Animated } from 'react-native'
 import { createStackNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import SignIn from '../screens/SignIn'
+import SignUp from '../screens/SignUp'
 
 export default createStackNavigator({
-  SignIn: SignIn,
   Main: MainTabNavigator,
+  SignIn: SignIn,
+  SignUp: SignUp,
+  
 },
 {
   headerMode: 'none',

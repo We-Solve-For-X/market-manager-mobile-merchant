@@ -48,9 +48,9 @@ export default class Communication extends React.Component {
             style={styles.addButton} 
             onPress={ 
               async () => { await this.setState({shouldRefresh: true})
-              this.props.navigation.navigate('CommunicationNew')}}
+              this.props.navigation.navigate('CommunicationView')}}
           >
-            <Text>NEW MESSAGE</Text>
+            <Text>VIEW</Text>
             <MaterialCommunityIcons name="email-plus-outline" size={22} />
           </Button>
 

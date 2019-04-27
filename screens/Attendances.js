@@ -16,7 +16,7 @@ import { HostID } from "../config/env"
 //API
 import { load } from "../networking/nm_sfx_markets";
 
-export default class Markets extends React.Component {
+export default class Attendances extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -48,13 +48,16 @@ export default class Markets extends React.Component {
         >
           <ErrorLine errorMessage={errorMessage}/>
 
+          <Text>Attendances</Text>
           <Button style={styles.crButton} 
             onPress={async () => {
               await this.setState({shouldRefresh: true})
-              this.props.navigation.navigate('MarketAdd')}}>
-            <Text>CREATE NEW MARKET</Text>
-            <FontAwesome size={22} name="calendar-plus-o" /> 
+              this.props.navigation.navigate('AttendanceDetails')}}>
+            <Text>VIEW ATTENDANCE</Text>
           </Button>
+
+
+
           <FlatList
             data={markets}
             //keyExtractor={(item) => item.spotSummary.spotId}

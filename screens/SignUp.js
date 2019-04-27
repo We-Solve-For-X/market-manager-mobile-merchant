@@ -9,6 +9,7 @@ import { connectStyle } from '@shoutem/theme'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import axios from 'axios'
 import ViewLoad from "../components/common/ViewLoad"
+import ViewSwitch from "../components/common/ViewSwitch"
 //consts & comps
 import colors from '../constants/colors'
 import layout from '../constants/layout'
@@ -17,14 +18,15 @@ import { signinAdmin } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
 
-class SignIn extends React.Component {
+class SignUp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       signingIn: false,
       errorMessage: null,
-      password: '',
-      email: ''
+      email: '',
+      standName: '',
+      submitted: false
     }
     this.signal = axios.CancelToken.source()
   }
@@ -38,7 +40,7 @@ class SignIn extends React.Component {
   }
 
   render() {
-    const { signingIn, password, email, errorMessage } = this.state
+    const { signingIn, email, standName, errorMessage, submitted } = this.state
 
     return (
       <ImageBackground
@@ -51,52 +53,62 @@ class SignIn extends React.Component {
           <View style={styles.subCont}>
             
             <View style={styles.headingCont}>
-              <Text style={styles.title}>Market Manager</Text>
-              <FontAwesome name="shopping-basket" size={50} style={styles.logoMain}/>
-              <Text style={styles.subTitle}>Irene Village Market</Text>
+              <Text style={styles.subTitle}>Register Your Account</Text>
+              <ViewSwitch hide={!submitted}>
+                <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will receive a confirmation email with further steps shortly.</Text>
+                <Button 
+                  style={styles.button} 
+                  onPress={() => this.props.navigation.navigate('SignIn')}>
+                  <Text>BACK</Text>
+                  <AntDesign name="back" size={22} />
+                </Button>
+              </ViewSwitch>
             </View>
 
-            <View style={styles.textInCont}>
-            <TextInput
-              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-              mode={'flat'}
-              underlineColor={'white'}
-              selectionColor={'white'}
-              label='Username'
-              value={email}
-              maxLength={55}
-              onChangeText={(email) => this.setState({email})}
-            />
-             <TextInput
-              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-              mode={'flat'}
-              underlineColor={'white'}
-              selectionColor={'white'}
-              label='Password'
-              value={password}
-              maxLength={17}
-              secureTextEntry
-              onChangeText={(password) => this.setState({password})}
-            />
-            </View>
+            <ViewSwitch hide={submitted} style={styles.textInCont}>
+              <TextInput
+                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+                mode={'flat'}
+                underlineColor={'white'}
+                selectionColor={'white'}
+                label='Email (username)'
+                placeholder={'please enter a valid email address'}
+                value={email}
+                maxLength={55}
+                onChangeText={(email) => this.setState({email})}
+              />
+              <TextInput
+                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+                mode={'flat'}
+                underlineColor={'white'}
+                selectionColor={'white'}
+                label='Stand Name'
+                placeholder={'Your stand or business name'}
+                value={standName}
+                maxLength={17}
+                secureTextEntry
+                onChangeText={(standName) => this.setState({standName})}
+              />
+            </ViewSwitch>
+
             <Text style={styles.errorMesg}>{errorMessage}</Text>
-            <View style={styles.signInCont}>
+
+            <ViewSwitch hide={submitted} style={styles.signInCont}>
               <Button 
                 style={styles.button} 
-                onPress={() => signingIn ? null : this._signInAsync()}>
-                <Text>LOG IN</Text>
+                onPress={() => signingIn || submitted ? null : this._register()}>
+                <Text>SUBMIT</Text>
                 <ViewLoad hide={signingIn}>
-                  <AntDesign name="login" size={22} />
+                  <AntDesign name="adduser" size={22} />
                 </ViewLoad>
               </Button>
               <Button 
-                style={styles.buttonB} 
-                onPress={() => this.props.navigation.navigate('SignUp')}>
-                <Text>REGISTER</Text>
-                {/* <AntDesign name="adduser" size={22} /> */}
+                style={styles.button} 
+                onPress={() => this.props.navigation.navigate('SignIn')}>
+                <Text>BACK</Text>
+                <AntDesign name="back" size={22} />
               </Button>
-              
-            </View>
+            </ViewSwitch>
             
           </View>
         </KeyboardAvoidingView>
@@ -104,28 +116,28 @@ class SignIn extends React.Component {
     )
   }
 
-  _signInAsync = async () => {
+  _register = async () => {
     this.setState({ signingIn: true, errorMessage: null })
-    let AuthIn = {userType: 'Administrator', username: this.state.email, password: this.state.password}
-    
-    const response = await signinAdmin(AuthIn, this.signal.token)
-    if (response.code == 200) {
-      const res = await asSetProfile(response.data, AuthIn.username) 
-      if(res == false){
-        this.setState({
-          signingIn: false,
-          errorMessage: "Unable to save info to your device storage",
-        }) 
-        return
-      }
-      this.setState({ signingIn: false }) 
-      this.props.navigation.navigate('Main');
-    } else {
-      this.setState({
-        errorMessage: response.data,
-        signingIn: false
-      })
-    }
+
+    //const response = await signinAdmin(AuthIn, this.signal.token)
+    // if (response.code == 200) {
+    //   const res = await asSetProfile(response.data, AuthIn.username) 
+    //   if(res == false){
+    //     this.setState({
+    //       signingIn: false,
+    //       errorMessage: "Unable to save info to your device storage",
+    //     }) 
+    //     return
+    //   }
+    //   this.setState({ signingIn: false }) 
+    //   this.props.navigation.navigate('Main');
+    // } else {
+    //   this.setState({
+    //     errorMessage: response.data,
+    //     signingIn: false
+    //   })
+    // }
+    this.setState({submitted: true})
   }
 
   // _isLogedIn = async () => {
@@ -133,7 +145,7 @@ class SignIn extends React.Component {
   // }
 
   static navigationOptions = {
-    title: 'SignIn',
+    title: 'SignUp',
   }
 }
 
@@ -188,6 +200,10 @@ const styles = StyleSheet.create({
     fontSize: isTablet ? 30 : 20, 
     color: colors.pWhite
   },
+  description: {
+    fontSize: isTablet ? 24 : 14, 
+    color: colors.pWhite
+  },
   textInCont: {
     flex: 2, 
     flexDirection: 'column', 
@@ -196,13 +212,8 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10, 
     marginHorizontal: 15, 
+    ...styleConsts.buttonBorder, 
     width: 115
-  },
-  buttonB: {
-    marginVertical: 10, 
-    marginHorizontal: 15, 
-    backgroundColor: colors.secondary,
-    width: 97
   },
   errorMesg: {
     fontSize: 15, 
@@ -211,7 +222,7 @@ const styles = StyleSheet.create({
 });
 
 
-export default connectStyle('com.example.AvatarItem', styles)(SignIn);
+export default connectStyle('com.example.AvatarItem', styles)(SignUp)
 
 
 
