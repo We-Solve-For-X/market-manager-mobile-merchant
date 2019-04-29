@@ -43,7 +43,7 @@ export default class CommunicationView extends React.Component {
           <View style={styles.divider}/>
           <LineView title={'Topic'}            value={topic}/>
           <View style={styles.divider}/>
-          <View style={styles.buttonContainer}>
+          {/* <View style={styles.buttonContainer}>
             <Button 
               style={styles.sendButton} 
               onPress={() => {deleting ? null : this._deleteMessage(id)}}>
@@ -52,7 +52,7 @@ export default class CommunicationView extends React.Component {
                 <MaterialCommunityIcons name="delete-outline" size={22} />
               </ViewLoad>
             </Button>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.messageContainer}>

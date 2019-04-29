@@ -4,17 +4,17 @@ import { packageResponse } from "../networking/responseProcessor"
 
 const MID_URL = 'home'
 
-export async function overview(hostId = '', administratorId = '', token) {
+export async function merchOverview(merchantId = '', token) {
     //Will be changed to a post soon
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/${hostId}/administrator/${administratorId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/${merchantId}`
     const packDataPromise = get(url, token)
     
     return packageResponse(packDataPromise)
 }
 
-export async function updateAdministrator(patchBody = {}, administratorId = '', token) {
+export async function updateMerchant(patchBody = {}, merchantId = '', token) {
     //Will be changed to a post soon
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/administrators/${administratorId}`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/${merchantId}`
     const packDataPromise = patch(url, patchBody, token)
     
     return packageResponse(packDataPromise)

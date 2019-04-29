@@ -63,27 +63,26 @@ export async function asMultiGet (keys = []) {
   }
 }
 
+
 export async function asSetProfile(profile = {}, username = ''){
     let uname = [ProfileCnsts.username, username]
-    let name = [ProfileCnsts.name, profile.name]
-    let surname = [ProfileCnsts.surname, profile.surname]
-    let email = [ProfileCnsts.email, profile.email]
-    let role = [ProfileCnsts.role, profile.role]
-    let id = [ProfileCnsts.adminstId, profile.id]
+    let stName = [ProfileCnsts.standName, profile.name]
+    let rpName = [ProfileCnsts.repName, profile.repName]
+    let surname = [ProfileCnsts.repSurname, profile.repSurname]
+    let id = [ProfileCnsts.id, profile.id]
 
-    res = await asMultiSet([uname, name, surname, email, role, id])
+    res = await asMultiSet([uname, stName, rpName, surname, id])
     return res
 }
 
 export async function asClearProfile(){
   let uname = [ProfileCnsts.username, '']
-  let name = [ProfileCnsts.name, '']
-  let surname = [ProfileCnsts.surname, '']
-  let email = [ProfileCnsts.email, '']
-  let role = [ProfileCnsts.role, '']
-  let id = [ProfileCnsts.adminstId, '']
+  let stName = [ProfileCnsts.standName, '']
+  let rpName = [ProfileCnsts.repName, '']
+  let surname = [ProfileCnsts.repSurname, '']
+  let id = [ProfileCnsts.id, '']
 
-  res = await asMultiSet([uname, name, surname, email, role, id])
+  res = await asMultiSet([uname, stName, rpName, surname, id])
   return res
 }
 

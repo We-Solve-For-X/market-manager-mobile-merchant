@@ -13,7 +13,7 @@ import ViewLoad from "../components/common/ViewLoad"
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
-import { signinAdmin } from "../networking/nm_sfx_auth"
+import { signinMerchant } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
 
@@ -23,8 +23,8 @@ class SignIn extends React.Component {
     this.state = {
       signingIn: false,
       errorMessage: null,
-      password: '',
-      email: ''
+      password: 'myword',
+      email: 'invia@granola.com'
     }
     this.signal = axios.CancelToken.source()
   }
@@ -106,9 +106,9 @@ class SignIn extends React.Component {
 
   _signInAsync = async () => {
     this.setState({ signingIn: true, errorMessage: null })
-    let AuthIn = {userType: 'Administrator', username: this.state.email, password: this.state.password}
+    let AuthIn = {userType: 'Merchant', username: this.state.email, password: this.state.password}
     
-    const response = await signinAdmin(AuthIn, this.signal.token)
+    const response = await signinMerchant(AuthIn, this.signal.token) 
     if (response.code == 200) {
       const res = await asSetProfile(response.data, AuthIn.username) 
       if(res == false){

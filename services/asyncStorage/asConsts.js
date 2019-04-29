@@ -1,8 +1,9 @@
 export const ProfileCnsts = {
     username: 'US_NAME',
-    name: 'NAME',
-    surname: 'SRNM',
+    standName: 'ST_NAME',
+    repName: 'RP_NAME',
+    repSurname: 'RP_SRNM',
     email: 'EMAIL',
     role: 'ROLE',
-    adminstId: 'ADMN_ID'
+    id: 'DB_ID'
 }

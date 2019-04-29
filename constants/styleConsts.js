@@ -25,6 +25,10 @@ export default styleConsts = StyleSheet.create({
         shadowRadius: 5, 
         shadowOpacity: 0.3
     },
+    headingOne: {
+        fontSize: isTablet ? 26 : 21,
+        fontWeight: "bold",
+    },
     textOne: {
         fontSize: isTablet ? 20 : 17,
         fontWeight: "bold",

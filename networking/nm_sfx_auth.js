@@ -4,9 +4,9 @@ import { packageResponse } from "../networking/responseProcessor"
 
 const MID_URL = 'auth'
 
-export async function signinAdmin(authPost = {}, token) {
+export async function signinMerchant(authPost = {}, token) {
     //Will be changed to a post soon
-    const url =  MARKMAN_BASE_URL + `/${MID_URL}/signinAdmin`
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/signin`
     const packDataPromise = post(url, authPost, token)
     
     return packageResponse(packDataPromise)

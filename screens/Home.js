@@ -16,7 +16,7 @@ import { systemAlert } from "../services/systemAlerts"
 import LineInput from "../components/common/LineInput"
 import LineView from "../components/common/LineView"
 //API
-import { overview, updateAdministrator, updatePriceZones } from "../networking/nm_sfx_home"
+import { merchOverview, updateMerchant } from "../networking/nm_sfx_home"
 import { changePassword } from "../networking/nm_sfx_auth"
 import ErrorLine from '../components/common/ErrorLine'
 import { asClearProfile } from "../services/asyncStorage/asApi"
@@ -25,50 +25,43 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      merchId: '',
+      host: {},
+      profile: {}, 
+      messagesTxt: '',
+      paymentsTxt: '',
       loading: false,
       errorMessage: null,
+
+      //updater fields
+      name: null,
+      legalName: null,
+      description: null,
+      category: null,
+      repName: null,
+      repSurname: null,
+      repEmail: null,
+      repCell: null,
+
       loadSignOut: false,
-      loadingPw: false,
-      pwErrorMessage: null,
+
       loadingPatch: false,
       patchErrorMessage: null,
-      administratorId: '',
+
+      loadingPw: false,
+      pwErrorMessage: null,
       userName: '',
       cPassw: null,
       nPassw: null,
-      updating: false,
-      host: {},
-      pName: null,
-      pSurname: null,
-      pEmail: null,
-      pRole: null,
-      marketsTxt: '',
-      paymentsTxt: '',
-      merchantsTxt: '',
-
-      priceB1_key: null,
-      priceB1_name: null,
-      priceB1_cost: null,
-      priceB2_key: null,
-      priceB2_name: null,
-      priceB2_cost: null,
-      priceB3_key: null,
-      priceB3_name: null,
-      priceB3_cost: null,
-      priceB4_key: null,
-      priceB4_name: null,
-      priceB4_cost: null,
-      pbLoading: false,
-      pbErrorMessage: null
-
+      updating: false
     }
     this.signal = axios.CancelToken.source()
   }
 
   componentDidMount = async () => {
-    let administratorId = await asGet(ProfileCnsts.adminstId)
+    let merchId = await asGet(ProfileCnsts.id)
     let userName = await asGet(ProfileCnsts.username)
-    await this.setState({administratorId, userName})
+    await this.setState({merchId, userName})
     this._fetchData()
   }
 
@@ -77,9 +70,12 @@ export default class Home extends React.Component {
   }
 
   render() {
-    const { host, marketsTxt, loadSignOut, paymentsTxt, merchantsTxt, userName, cPassw, nPassw, loadingPw, pwErrorMessage, loadingPatch, patchErrorMessage, loading, errorMessage } = this.state
-    const { pName, pSurname, pEmail, pRole } = this.state
-    const { pbLoading, pbErrorMessage, priceB1_key, priceB1_name, priceB1_cost, priceB2_key, priceB2_name, priceB2_cost, priceB3_key, priceB3_name, priceB3_cost, priceB4_key, priceB4_name, priceB4_cost } = this.state
+    const { host, profile, messagesTxt, paymentsTxt } = this.state
+    const { loadSignOut, loadingPatch, patchErrorMessage, loading, errorMessage } = this.state
+    //password
+    const { userName, cPassw, nPassw, loadingPw, pwErrorMessage } = this.state
+    //updater fields
+    const { name, legalName, description, category, repName, repSurname, repEmail, repCell } = this.state
 
     return (
     <View style={styles.container}>
@@ -92,23 +88,23 @@ export default class Home extends React.Component {
         contentContainerStyle={styles.scrollContainer}>
         <ErrorLine errorMessage={errorMessage}/>
 
-        <ViewSwitch style={styles.dataCardTop} hide={!pName}>
-          <Heading style={styles.topHeadTxt}>Hi, {pName}.</Heading>
+        <ViewSwitch style={styles.dataCardTop} hide={!profile.repName}>
+          <Heading style={styles.topHeadTxt}>Hi, {profile.repName}.</Heading>
           <Subtitle style={styles.topSubTxt}>Welcome to Irene Market Manager</Subtitle>
         </ViewSwitch>
 
         <ViewSwitch style={styles.dataCard} hide={!paymentsTxt}>
-          <Heading>Payments</Heading>
+          <Heading style={styleConsts.headingOne}>Payments</Heading>
           <Subtitle>{paymentsTxt}</Subtitle>
         </ViewSwitch>
 
-        <ViewSwitch style={styles.dataCard} hide={!merchantsTxt}>
-          <Heading>Merchants</Heading>
-          <Subtitle>{merchantsTxt}</Subtitle>
+        <ViewSwitch style={styles.dataCard} hide={!messagesTxt}>
+          <Heading style={styleConsts.headingOne}>Messages</Heading>
+          <Subtitle>{messagesTxt}</Subtitle>
         </ViewSwitch>
 
-        <View style={styles.dataCard}>
-          <Heading >Your Host's Details</Heading>
+        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+          <Heading style={styleConsts.headingOne} >Your Host Market's Details</Heading>
           <Subtitle>Irene Market Information:</Subtitle>
           <View style={styles.divider}/>
           <LineView title={'Name'}            value={host.name}/>
@@ -122,10 +118,10 @@ export default class Home extends React.Component {
           <LineView title={'Website'}         value={host.website}/>
           <View style={styles.divider}/>
           <LineView title={'Address'}         value={host.address ? `${host.address.streetAddress}\n${host.address.city}\n${host.address.state}\n${host.address.zipCode}` : null}/>
-        </View>
+        </ViewSwitch> 
 
-        <View style={styles.dataCard}>
-          <Heading>Host Bank Account</Heading>
+        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+          <Heading style={styleConsts.headingOne}>Host Bank Account</Heading>
           <Subtitle>Bank Account Into Which Payments Must Be Made:</Subtitle>
           <View style={styles.divider}/>
           <LineView title={'Bank'}          value={host.bankAccount ? `${host.bankAccount.bankName}` : null}/>
@@ -139,37 +135,58 @@ export default class Home extends React.Component {
           <LineView title={'Branch Name'}   value={host.bankAccount ? `${host.bankAccount.branchName}` : null}/>
           <View style={styles.divider}/>
           <LineView title={'Branch Code'}   value={host.bankAccount ? `${host.bankAccount.branchCode}` : null}/>
-        </View>
+        </ViewSwitch>
 
-        <View style={styles.dataCard}>
-          <Heading>Merchant Details</Heading>
+        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+          <Heading style={styleConsts.headingOne}>Merchant Meta Data</Heading>
+          <Subtitle>Merchant Status Information:</Subtitle>
+          <LineView title={'Status'}      value={profile.status}/>
+          <View style={styles.divider}/>
+          <LineView title={'Is-Active'}   value={profile.isActive ? 'ACTIVE' : 'INACTIVE'}/>
+          <View style={styles.divider}/>
+          <LineView title={'Price Zone'}   value={profile.priceZone ? profile.priceZone.name : null}/>
+          <View style={styles.divider}/>
+          <LineView title={'Stand ID'}    value={profile.standId ? profile.standId : '(no stand-ID assigned)'}/>
+        </ViewSwitch>
+
+        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+          <Heading style={styleConsts.headingOne}>Merchant Details</Heading>
           <Subtitle>Your Business and User Profile Information:</Subtitle>
           <View style={styles.divider}/>
-          <LineInput title={'Name'}     value={pName} onChange={(pName) => this.setState({pName})}/>
+          <LineInput title={'Name'}        value={name} onChange={(name) => this.setState({name})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Surname'}  value={pSurname} onChange={(pSurname) => this.setState({pSurname})}/>
+          <LineInput title={'Legal Name'}  value={legalName} onChange={(legalName) => this.setState({legalName})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Email'}    value={pEmail} maxLength={50} onChange={(pEmail) => this.setState({pEmail})}/>
+          <LineInput title={'Description'} value={description} onChange={(description) => this.setState({description})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Role'}     value={pRole} onChange={(pRole) => this.setState({pRole})}/>
+          <LineInput title={'Category'}    value={category} onChange={(category) => this.setState({category})}/>
           <View style={styles.divider}/>
+          <LineInput title={'Rep Name'}    value={repName} onChange={(repName) => this.setState({repName})}/>
+          <View style={styles.divider}/>
+          <LineInput title={'Rep Surname'} value={repSurname} onChange={(repSurname) => this.setState({repSurname})}/>
+          <View style={styles.divider}/>
+          <LineInput title={'Email'}       value={repEmail} onChange={(repEmail) => this.setState({repEmail})}/>
+          <View style={styles.divider}/>
+          <LineInput title={'Cell'}        value={repCell} onChange={(repCell) => this.setState({repCell})}/>
+          <View style={styles.divider}/>
+
           <ViewSwitch hide={pwErrorMessage == null}>
               <Text style={styles.errorText}>{patchErrorMessage}</Text>
           </ViewSwitch>
           <View style={styles.buttonContainer}>
           <Button 
             style={styles.button} 
-            onPress={() => loadingPatch ? null : this._updateAdminst()}>
+            onPress={() => loadingPatch ? null : this._updateMerch()}>
             <Text>UPDATE</Text>
             <ViewLoad hide={loadingPatch}>
               <AntDesign name="clouduploado" size={22} />
             </ViewLoad>
           </Button>   
           </View> 
-        </View>
+        </ViewSwitch>
 
         <View style={styles.dataCard}>
-          <Heading>Sign-In Credentials</Heading>
+          <Heading style={styleConsts.headingOne}>Sign-In Credentials</Heading>
           <Subtitle>Change User Credentials:</Subtitle>
           <View style={styles.divider}/>
           <LineView title={'Username'}      value={userName} maxLength={50}/>
@@ -211,58 +228,23 @@ export default class Home extends React.Component {
     )
   }
 
-  _updatePriceBrackets = async () => {
-    this.setState({ pbLoading: true })
-    const { priceB1_name, priceB1_cost, priceB2_name, priceB2_cost, priceB3_name, priceB3_cost, priceB4_name, priceB4_cost } = this.state
-    if(isNaN(parseFloat(priceB1_cost)) || isNaN(parseFloat(priceB2_cost)) || isNaN(parseFloat(priceB3_cost)) || isNaN(parseFloat(priceB4_cost))) {
-      systemAlert('Invalid Amount', 'Please ensure all price zone costs are pure numericals')
-      this.setState({pbLoading: false})
-      return
-    }
-    else if(priceB1_name.length < 5 || priceB2_name.length < 5 || priceB3_name.length < 5 || priceB4_name.length < 5) {
-      systemAlert('Description Error', 'Ensure that all price bracket have an adequate description')
-      this.setState({pbLoading: false})
-      return
-    }
 
-    let zoneA = {key: 'A', name: priceB1_name, cost: parseFloat(priceB1_cost)}
-    let zoneB = {key: 'B', name: priceB2_name, cost: parseFloat(priceB2_cost)}
-    let zoneC = {key: 'C', name: priceB3_name, cost: parseFloat(priceB3_cost)}
-    let zoneD = {key: 'D', name: priceB4_name, cost: parseFloat(priceB4_cost)}
-
-    let update = { zoneA, zoneB, zoneC, zoneD }
-    let response = await updatePriceZones(HostID, update, this.signal.token)
-    if (response.code == 200) {
-      await this.setState({
-        pbLoading: false,
-        pbErrorMessage: null,
-        loading: false
-      })
-      await this._fetchData(true) 
-    } else {
-      await this.setState({
-        pbErrorMessage: response.data,
-        pbLoading: false
-      })
-    }
-  }
-
-  _updateAdminst = async () => {
+  _updateMerch = async () => {
     this.setState({ loadingPatch: true })
-    let { pName, pSurname, pEmail, pRole } = this.state
-    if(pName == null || pSurname == null || pEmail == null || pRole == null) {
+    const { name, legalName, description, category, repName, repSurname, repEmail, repCell } = this.state
+    if(name == null || description == null || category == null || repName == null || repSurname == null || repEmail == null || repCell == null) {
       systemAlert('Content Required', 'All the fields are not populated, unable to update')
       this.setState({loadingPatch: false})
       return
     }
-    else if(pName.length == 0 || pSurname.length == 0 || pEmail.length == 0 || pRole.length == 0) {
+    else if(name.length < 4 || description.length < 4 || repEmail.length < 5 || repName.length == 0) {
       systemAlert('Password Error', 'All the fields are not populated, unable to update')
       this.setState({loadingPatch: false})
       return
     }
-    let adminId = this.state.administratorId
-    let update = { name: pName, surname: pSurname, email: pEmail, role: pRole }
-    let response = await updateAdministrator(update, adminId, this.signal.token)
+    let merchId = this.state.merchId
+    let update = { name, legalName, description, category, repName, repSurname, repEmail, repCell }
+    let response = await updateMerchant(update, merchId, this.signal.token)
     if (response.code == 200) {
       await this.setState({
         loadingPatch: false,
@@ -317,32 +299,26 @@ export default class Home extends React.Component {
 
   _fetchData = async (silent = false) => {
     if(silent){ null } else { await this.setState({ loading: true }) }
-    let adminId = this.state.administratorId
-    let response = await overview(HostID, adminId, this.signal.token)
+    let merchId = this.state.merchId
+    let response = await merchOverview(merchId, this.signal.token)
     if (response.code == 200) {
-      let { host, profile } = response.data
+      let { host, profile, paymentsTxt, messagesTxt } = response.data
+      let { name, legalName, description, category, repName, repSurname, repCell, repEmail } = profile
       await this.setState({
         host:         host, 
-        pName:        profile.name,
-        pSurname:     profile.surname,
-        pEmail:       profile.email,
-        pRole:        profile.role, 
-        marketsTxt:   response.data.marketsTxt, 
-        paymentsTxt:  response.data.paymentsTxt, 
-        merchantsTxt: response.data.merchantsTxt,
-
-        priceB1_key: 'A',
-        priceB1_name: host.priceBrackets.find(pz => pz.key === 'A').name,
-        priceB1_cost: host.priceBrackets.find(pz => pz.key === 'A').cost,
-        priceB2_key: 'B',
-        priceB2_name: host.priceBrackets.find(pz => pz.key === 'B').name,
-        priceB2_cost: host.priceBrackets.find(pz => pz.key === 'B').cost,
-        priceB3_key: 'C',
-        priceB3_name: host.priceBrackets.find(pz => pz.key === 'C').name,
-        priceB3_cost: host.priceBrackets.find(pz => pz.key === 'C').cost,
-        priceB4_key: 'D',
-        priceB4_name: host.priceBrackets.find(pz => pz.key === 'D').name,
-        priceB4_cost: host.priceBrackets.find(pz => pz.key === 'D').cost,
+        profile:      profile, 
+        messagesTxt:  messagesTxt,
+        paymentsTxt:  paymentsTxt,
+        //updater fields
+        name, 
+        legalName, 
+        description, 
+        category, 
+        repName, 
+        repSurname, 
+        repCell,
+        repEmail,
+        //error handling fields
         loading:      false,
         errorMessage: null
       }) 

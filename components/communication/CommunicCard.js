@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems: 'center',
-      marginBottom: 10,
+      marginTop: 10,
       padding: 8,
       borderRadius: 5
     },

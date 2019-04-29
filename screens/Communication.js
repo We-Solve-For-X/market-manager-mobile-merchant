@@ -11,13 +11,16 @@ import Updater from "../components/common/Updater"
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import { HostID } from "../config/env"
+import { asGet } from "../services/asyncStorage/asApi"
+import { ProfileCnsts } from "../services/asyncStorage/asConsts"
 //API
-import { adminInbox } from "../networking/nm_sfx_communication"
+import { merchantInbox } from "../networking/nm_sfx_communication"
 
 export default class Communication extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      merchId: '',
       messages: [],
       errorMessage: '',
       loading: false,
@@ -26,7 +29,9 @@ export default class Communication extends React.Component {
     this.signal = axios.CancelToken.source()
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+    let merchId = await asGet(ProfileCnsts.id)
+    await this.setState({merchId})
     this._fetchData()
   }
 
@@ -44,7 +49,7 @@ export default class Communication extends React.Component {
           refreshControl={ <RefreshControl refreshing={loading} nRefresh={() => this._fetchData()} />} 
         >
           <ErrorLine errorMessage={errorMessage}/>
-          <Button 
+          {/* <Button 
             style={styles.addButton} 
             onPress={ 
               async () => { await this.setState({shouldRefresh: true})
@@ -52,7 +57,7 @@ export default class Communication extends React.Component {
           >
             <Text>VIEW</Text>
             <MaterialCommunityIcons name="email-plus-outline" size={22} />
-          </Button>
+          </Button> */}
 
           <FlatList
             data={messages}
@@ -80,7 +85,8 @@ export default class Communication extends React.Component {
 
   _fetchData = async () => {
     this.setState({ loading: true })
-    const response = await adminInbox(HostID, this.signal.token)
+    let merchantId = this.state.merchId
+    const response = await merchantInbox(merchantId, HostID, this.signal.token)
     if (response.code == 200) {
       this.setState({
         messages: response.data,
