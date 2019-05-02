@@ -10,7 +10,7 @@ const LineView = ({title, value}) => {
           <Text>{title}: </Text>
         </View>
         <View style={styles.lineViewText}>
-          <Text>{value}</Text>
+          <Text>{value ? value : null}</Text>
         </View>
       </View>
     )

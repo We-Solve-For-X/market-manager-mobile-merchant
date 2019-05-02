@@ -83,7 +83,7 @@ export default class Home extends React.Component {
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={() => this._fetchData()}
+            onRefresh={() => this._fetchData(true)}
           />} 
         contentContainerStyle={styles.scrollContainer}>
         <ErrorLine errorMessage={errorMessage}/>
@@ -299,7 +299,7 @@ export default class Home extends React.Component {
 
   _fetchData = async (silent = false) => {
     if(silent){ null } else { await this.setState({ loading: true }) }
-    let merchId = this.state.merchId
+    let merchId = await asGet(ProfileCnsts.id)
     let response = await merchOverview(merchId, this.signal.token)
     if (response.code == 200) {
       let { host, profile, paymentsTxt, messagesTxt } = response.data

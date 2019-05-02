@@ -5,25 +5,25 @@ import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios'
 //consts & comps
 import ErrorLine from "../components/common/ErrorLine"
-import MarketCard from '../components/markets/MarketCard'
+import AttendanceCard from '../components/markets/AttendanceCard'
 import NoContent from "../components/common/NoContent"
 import Updater from "../components/common/Updater"
 import colors from '../constants/colors'
 import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
 import { HostID } from "../config/env"
+import { asGet } from "../services/asyncStorage/asApi"
+import { ProfileCnsts } from "../services/asyncStorage/asConsts"
 
 //API
-import { load } from "../networking/nm_sfx_markets";
+import { load } from "../networking/nm_sfx_attendances";
 
 export default class Attendances extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nFuture: 0,
-      nPast: 0,
       loading: false,
-      markets: [],
+      attendances: [],
       shouldRefresh: false
     }
     this.signal = axios.CancelToken.source()
@@ -38,7 +38,7 @@ export default class Attendances extends React.Component {
   }
 
   render() {
-    const { markets, loading, nFuture, nPast, shouldRefresh, errorMessage } = this.state
+    const { attendances, loading, nFuture, nPast, shouldRefresh, errorMessage } = this.state
     
     return (
       <View style={styles.container}>
@@ -48,20 +48,20 @@ export default class Attendances extends React.Component {
         >
           <ErrorLine errorMessage={errorMessage}/>
 
-          <Text>Attendances</Text>
+          {/* <Text>Attendances</Text>
           <Button style={styles.crButton} 
             onPress={async () => {
               await this.setState({shouldRefresh: true})
               this.props.navigation.navigate('AttendanceDetails')}}>
             <Text>VIEW ATTENDANCE</Text>
-          </Button>
+          </Button> */}
 
 
 
           <FlatList
-            data={markets}
+            data={attendances}
             //keyExtractor={(item) => item.spotSummary.spotId}
-            renderItem={({item}) => this._renderMarket(item)}
+            renderItem={({item}) => this._renderAttendance(item)}
             scrollEnabled={false}
             //isLoading={loading}
             ListEmptyComponent={<NoContent refresh={true}/>}
@@ -71,19 +71,18 @@ export default class Attendances extends React.Component {
     )
   }
 
-  _renderMarket = (market) => {
+  _renderAttendance = (attendance) => {
     const navigation = this.props.navigation
-    return ( <MarketCard navigation={navigation} market={market}/> )
+    return ( <AttendanceCard navigation={navigation} attendance={attendance}/> )
   }
 
   _fetchData = async () => {
     this.setState({ loading: true })
-    const response = await load(HostID, this.signal.token)
+    let merchId = await asGet(ProfileCnsts.id)
+    let response = await load(merchId, this.signal.token)
     if (response.code == 200) {
       this.setState({
-        nFuture: response.data.nFuture,
-        nPast: response.data.nPast, 
-        markets: response.data.markets,
+        attendances: response.data,
         loading: false,
         errorMessage: null
       }) 
