@@ -21,6 +21,14 @@ export async function fetch(attendanceId = '', token) {
     return packageResponse(packDataPromise)
 }
 
+export async function submitPayment(invoiceId = '', token) {
+    //Will be changed to a post soon
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/invoices/${invoiceId}/submit`
+    const packDataPromise = post(url, {}, token)
+    
+    return packageResponse(packDataPromise)
+}
+
 // export async function updateMerchant(patchBody = {}, merchantId = '', token) {
 //     //Will be changed to a post soon
 //     const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/${merchantId}`

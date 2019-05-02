@@ -4,6 +4,7 @@ import imagesRef from '../assets/imagesRef'
 import { Button, } from "@shoutem/ui"
 import { Text, Title, Heading } from "@shoutem/ui"
 //import { TextInput } from "@shoutem/ui"
+import { systemAlert } from "../services/systemAlerts"
 import { TextInput } from "react-native-paper"
 import { connectStyle } from '@shoutem/theme'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
@@ -14,7 +15,7 @@ import ViewSwitch from "../components/common/ViewSwitch"
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
-import { signinAdmin } from "../networking/nm_sfx_auth"
+import { signUpMerchant } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
 
@@ -22,9 +23,9 @@ class SignUp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      signingIn: false,
+      signingUp: false,
       errorMessage: null,
-      email: '',
+      username: '',
       standName: '',
       submitted: false
     }
@@ -40,7 +41,7 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const { signingIn, email, standName, errorMessage, submitted } = this.state
+    const { signingUp, username, standName, errorMessage, submitted } = this.state
 
     return (
       <ImageBackground
@@ -53,16 +54,16 @@ class SignUp extends React.Component {
           <View style={styles.subCont}>
             
             <View style={styles.headingCont}>
-              <Text style={styles.subTitle}>Register Your Account</Text>
-              <ViewSwitch hide={!submitted}>
+
+              <ViewSwitch  hide={submitted}>
+                <Text style={styles.subTitle}>Register Your Account</Text>
                 <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will receive a confirmation email with further steps shortly.</Text>
-                <Button 
-                  style={styles.button} 
-                  onPress={() => this.props.navigation.navigate('SignIn')}>
-                  <Text>BACK</Text>
-                  <AntDesign name="back" size={22} />
-                </Button>
               </ViewSwitch>
+              <ViewSwitch  hide={!submitted}>
+                <Text style={styles.subTitle}>Success!</Text>
+                <Text style={styles.description}>Thank you for signing up. If your email adress is valid, you will receive a confirmation email with your temporary password shortly.</Text>
+              </ViewSwitch>
+
             </View>
 
             <ViewSwitch hide={submitted} style={styles.textInCont}>
@@ -73,9 +74,9 @@ class SignUp extends React.Component {
                 selectionColor={'white'}
                 label='Email (username)'
                 placeholder={'please enter a valid email address'}
-                value={email}
+                value={username}
                 maxLength={55}
-                onChangeText={(email) => this.setState({email})}
+                onChangeText={(username) => this.setState({username})}
               />
               <TextInput
                 theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
@@ -96,9 +97,9 @@ class SignUp extends React.Component {
             <ViewSwitch hide={submitted} style={styles.signInCont}>
               <Button 
                 style={styles.button} 
-                onPress={() => signingIn || submitted ? null : this._register()}>
+                onPress={() => signingUp || submitted ? null : this._register()}>
                 <Text>SUBMIT</Text>
-                <ViewLoad hide={signingIn}>
+                <ViewLoad hide={signingUp}>
                   <AntDesign name="adduser" size={22} />
                 </ViewLoad>
               </Button>
@@ -109,7 +110,18 @@ class SignUp extends React.Component {
                 <AntDesign name="back" size={22} />
               </Button>
             </ViewSwitch>
-            
+            <ViewSwitch hide={!submitted} style={styles.signInCont}>
+              <Button 
+                style={styles.button} 
+                onPress={() => {
+                  this.setState({submitted: false, signingUp: false})
+                  this.props.navigation.navigate('SignIn')
+                  }}>
+                <Text>BACK</Text>
+                <AntDesign name="back" size={22} />
+              </Button>
+            </ViewSwitch>
+
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
@@ -117,27 +129,42 @@ class SignUp extends React.Component {
   }
 
   _register = async () => {
-    this.setState({ signingIn: true, errorMessage: null })
+    this.setState({ signingUp: true, errorMessage: null })
+    let { username, standName } = this.state
 
-    //const response = await signinAdmin(AuthIn, this.signal.token)
-    // if (response.code == 200) {
-    //   const res = await asSetProfile(response.data, AuthIn.username) 
-    //   if(res == false){
-    //     this.setState({
-    //       signingIn: false,
-    //       errorMessage: "Unable to save info to your device storage",
-    //     }) 
-    //     return
-    //   }
-    //   this.setState({ signingIn: false }) 
-    //   this.props.navigation.navigate('Main');
-    // } else {
-    //   this.setState({
-    //     errorMessage: response.data,
-    //     signingIn: false
-    //   })
-    // }
-    this.setState({submitted: true})
+    if(username.lenth < 3 ||  standName.lenth < 3) {
+      systemAlert('Incomplete Info', 'Please complete both fields before submitting your profile.')
+      this.setState({ signingUp: false  })
+    } else if (false) {
+      systemAlert('Invalid Email', 'Please enter a valid email address.')
+    }
+
+    let signUpPost = {
+      userType: "Merchant",
+      username: username,
+      standName: standName
+    }
+
+    const response = await signUpMerchant(signUpPost, this.signal.token)
+    if (response.code == 200) {
+      const res = await asSetProfile(response.data, AuthIn.username) 
+      if(res == false){
+        this.setState({
+          signingUp: false,
+          errorMessage: "Unable to save info to your device storage",
+        }) 
+        return
+      }
+      this.setState({ signingUp: false }) 
+      this.props.navigation.navigate('Main');
+    } else {
+      this.setState({
+        errorMessage: response.data,
+        signingUp: false
+      })
+    }
+
+    this.setState({signingUp: false})
   }
 
   // _isLogedIn = async () => {

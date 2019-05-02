@@ -12,6 +12,14 @@ export async function signinMerchant(authPost = {}, token) {
     return packageResponse(packDataPromise)
 }
 
+export async function signUpMerchant(signupPost = {}, token) {
+    //Will be changed to a post soon
+    const url =  MARKMAN_BASE_URL + `/${MID_URL}/merchants/signup`
+    const packDataPromise = post(url, signupPost, token)
+    
+    return packageResponse(packDataPromise)
+}
+
 // nPassword(username: String,
 //     cPassword: String,
 //     nPassword: String)

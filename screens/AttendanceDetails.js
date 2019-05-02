@@ -20,9 +20,8 @@ import styleConsts from '../constants/styleConsts'
 import layout from '../constants/layout'
 import { HostID } from "../config/env"
 //API
-import { fetch } from "../networking/nm_sfx_attendances"
-import { submitPayment } from "../networking/nm_sfx_markets"
-import ViewLoad from '../components/common/ViewLoad';
+import { fetch, submitPayment } from "../networking/nm_sfx_attendances"
+import ViewLoad from '../components/common/ViewLoad'
 
 export default class AttendanceDetails extends React.Component {
   constructor(props){
@@ -140,43 +139,27 @@ export default class AttendanceDetails extends React.Component {
 
   _confirmPayment = async () => {
     this.setState({confirmPaymentLoad: true})
-    let merchantId = await asGet(ProfileCnsts.id)
     const { invoice } = this.state
-    let method = 'eft'
-    let comment = this.state.paymentComment
     let invoiceId = invoice.id
-    let amount = parseFloat(invoice.amount)
-    let reference = invoice.refNum
 
-    if(invoiceId == null || merchantId == null || reference == null || amount == null) {
+    if(invoiceId == null) {
       systemAlert('Payment Error', 'Unable to retreive all fields required to make the payment')
-      this.setState({ submitting: false  })
-    } else if(amount == null) {
-      systemAlert('Payment Error', 'The payment amount you entered was incorrect')
-      this.setState({ submitting: false })
+      this.setState({ confirmPaymentLoad: false  })
     }
 
-    let payment = {
-      invoiceId,
-      merchantId,
-      amount,
-      reference,
-      sourceRef: 'merchant-app submission',
-      method,
-      comment
-    }
-    const response = await submitPayment(payment, this.signal.token)
+    const response = await submitPayment(invoiceId, this.signal.token)
     if (response.code == 200) {
-      this._fetchData()
-      this.setState({
+      await this.setState({
         paymErrorMessage: null,
         confirmPaymentLoad: false,
         confirmPayment: false
       }) 
+      this._fetchData(true)
     } else {
       systemAlert('Payment Error', `There was an error processing the payment on our servers: ${response.data}`)
       this.setState({
         paymErrorMessage: response.data,
+        confirmPaymentLoad: false,
         submitting: false
       })
     }
@@ -197,8 +180,8 @@ export default class AttendanceDetails extends React.Component {
     // }
   }
 
-  _fetchData = async () => {
-    this.setState({ loading: true })
+  _fetchData = async (silent = false) => {
+    silent ? null : this.setState({ loading: true })
     let attendanceId = this.props.navigation.getParam('attendanceId', '')
     let response = await fetch(attendanceId, this.signal.token)
     console.log(response)

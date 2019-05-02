@@ -76,8 +76,8 @@ export default class Attendances extends React.Component {
     return ( <AttendanceCard navigation={navigation} attendance={attendance}/> )
   }
 
-  _fetchData = async () => {
-    this.setState({ loading: true })
+  _fetchData = async (silent = false) => {
+    silent ? null : this.setState({ loading: true })
     let merchId = await asGet(ProfileCnsts.id)
     let response = await load(merchId, this.signal.token)
     if (response.code == 200) {
