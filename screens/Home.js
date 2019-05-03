@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl} from 'react-native'
+import { View, StyleSheet, ScrollView, RefreshControl, KeyboardAvoidingView } from 'react-native'
 import { Text, Heading, Subtitle, Title, TextInput, Button } from '@shoutem/ui'
 import { isTablet } from "../constants/platform"
 import axios from 'axios'
@@ -79,13 +79,8 @@ export default class Home extends React.Component {
 
     return (
     <View style={styles.container}>
-      <ScrollView 
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => this._fetchData(true)}
-          />} 
-        contentContainerStyle={styles.scrollContainer}>
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={120}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <ErrorLine errorMessage={errorMessage}/>
 
         <ViewSwitch style={styles.dataCardTop} hide={!profile.repName}>
@@ -103,7 +98,7 @@ export default class Home extends React.Component {
           <Subtitle>{messagesTxt}</Subtitle>
         </ViewSwitch>
 
-        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+        <ViewSwitch style={styles.dataCard} hide={!profile.name}>
           <Heading style={styleConsts.headingOne} >Your Host Market's Details</Heading>
           <Subtitle>Irene Market Information:</Subtitle>
           <View style={styles.divider}/>
@@ -120,7 +115,7 @@ export default class Home extends React.Component {
           <LineView title={'Address'}         value={host.address ? `${host.address.streetAddress}\n${host.address.city}\n${host.address.state}\n${host.address.zipCode}` : null}/>
         </ViewSwitch> 
 
-        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+        <ViewSwitch style={styles.dataCard} hide={!profile.name}>
           <Heading style={styleConsts.headingOne}>Host Bank Account</Heading>
           <Subtitle>Bank Account Into Which Payments Must Be Made:</Subtitle>
           <View style={styles.divider}/>
@@ -137,7 +132,7 @@ export default class Home extends React.Component {
           <LineView title={'Branch Code'}   value={host.bankAccount ? `${host.bankAccount.branchCode}` : null}/>
         </ViewSwitch>
 
-        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+        <ViewSwitch style={styles.dataCard} hide={!profile.name}>
           <Heading style={styleConsts.headingOne}>Merchant Meta Data</Heading>
           <Subtitle>Merchant Status Information:</Subtitle>
           <LineView title={'Status'}      value={profile.status}/>
@@ -149,27 +144,26 @@ export default class Home extends React.Component {
           <LineView title={'Stand ID'}    value={profile.standId ? profile.standId : '(no stand-ID assigned)'}/>
         </ViewSwitch>
 
-        <ViewSwitch style={styles.dataCard} hide={!profile.repName}>
+        <ViewSwitch style={styles.dataCard} hide={!profile.name}>
           <Heading style={styleConsts.headingOne}>Merchant Details</Heading>
           <Subtitle>Your Business and User Profile Information:</Subtitle>
           <View style={styles.divider}/>
           <LineInput title={'Name'}        value={name} onChange={(name) => this.setState({name})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Legal Name'}  value={legalName} onChange={(legalName) => this.setState({legalName})}/>
+          <LineInput title={'Legal Name'}  value={legalName} maxLength={100} onChange={(legalName) => this.setState({legalName})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Description'} value={description} onChange={(description) => this.setState({description})}/>
+          <LineInput title={'Description'} value={description} maxLength={150} onChange={(description) => this.setState({description})}/>
           <View style={styles.divider}/>
           <LineInput title={'Category'}    value={category} onChange={(category) => this.setState({category})}/>
           <View style={styles.divider}/>
           <LineInput title={'Rep Name'}    value={repName} onChange={(repName) => this.setState({repName})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Rep Surname'} value={repSurname} onChange={(repSurname) => this.setState({repSurname})}/>
+          <LineInput title={'Rep Surname'} value={repSurname} maxLength={30} onChange={(repSurname) => this.setState({repSurname})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Email'}       value={repEmail} onChange={(repEmail) => this.setState({repEmail})}/>
+          <LineInput title={'Email'}       value={repEmail} maxLength={80} onChange={(repEmail) => this.setState({repEmail})}/>
           <View style={styles.divider}/>
-          <LineInput title={'Cell'}        value={repCell} onChange={(repCell) => this.setState({repCell})}/>
+          <LineInput title={'Cell'}        value={repCell} maxLength={12} onChange={(repCell) => this.setState({repCell})}/>
           <View style={styles.divider}/>
-
           <ViewSwitch hide={pwErrorMessage == null}>
               <Text style={styles.errorText}>{patchErrorMessage}</Text>
           </ViewSwitch>
@@ -224,6 +218,7 @@ export default class Home extends React.Component {
         </View>
 
         </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     )
   }
@@ -255,7 +250,8 @@ export default class Home extends React.Component {
     } else {
       await this.setState({
         patchErrorMessage: response.data,
-        loadingPatch: false
+        loadingPatch: false,
+        loading: false
       })
     }
   }

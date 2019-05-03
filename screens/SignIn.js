@@ -47,8 +47,10 @@ class SignIn extends React.Component {
       style={styles.container}
       resizeMode={'cover'}
       > 
-      <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
-          <View style={styles.subCont}>
+      <View style={styles.subCont}>
+
+        <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
+          
             
             <View style={styles.headingCont}>
               <Text style={styles.title}>Market Manager</Text>
@@ -79,6 +81,9 @@ class SignIn extends React.Component {
               onChangeText={(password) => this.setState({password})}
             />
             </View>
+            </KeyboardAvoidingView>
+
+            <View style={styles.buttonCont}>      
             <Text style={styles.errorMesg}>{errorMessage}</Text>
             <View style={styles.signInCont}>
               <Button 
@@ -95,11 +100,11 @@ class SignIn extends React.Component {
                 <Text>REGISTER</Text>
                 {/* <AntDesign name="adduser" size={22} /> */}
               </Button>
-              
-            </View>
+              </View>
             
+            </View>
           </View>
-        </KeyboardAvoidingView>
+        
       </ImageBackground>
     )
   }
@@ -147,21 +152,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.pViewBg,
     opacity: 0.99
   },
-  keybCont: {
-    width: '100%', 
-    height: '100%', 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center'
-  },
   subCont: {
     width: '90%', 
     height: '94%',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     backgroundColor: colors.pBlackTransp, 
     paddingHorizontal: '4%', 
     borderRadius: 5
+  },
+  keybCont: {
+    flex: 1,
+    width: '100%', 
+    flexDirection: 'column', 
+    justifyContent: 'flex-start', 
+    alignItems: 'center',
+    paddingBottom: 5
   },
   signInCont: {
     flex: 3, 
@@ -190,8 +196,12 @@ const styles = StyleSheet.create({
   },
   textInCont: {
     flex: 2, 
+    width: '100%',
     flexDirection: 'column', 
     justifyContent: 'space-around'
+  },
+  buttonCont: {
+    height: 135
   },
   button: {
     marginVertical: 10, 

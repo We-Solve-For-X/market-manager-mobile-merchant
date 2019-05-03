@@ -15,6 +15,8 @@ import ViewSwitch from "../components/common/ViewSwitch"
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
+import { HostID } from '../config/env'
+import { validateEmail } from "../services/validators";
 import { signUpMerchant } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
@@ -49,81 +51,81 @@ class SignUp extends React.Component {
       imageStyle={{opacity: 1}}
       style={styles.container}
       resizeMode={'cover'}
-      > 
-      <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
-          <View style={styles.subCont}>
-            
-            <View style={styles.headingCont}>
+      >     
+      <View style={styles.subCont}>
 
-              <ViewSwitch  hide={submitted}>
-                <Text style={styles.subTitle}>Register Your Account</Text>
-                <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will receive a confirmation email with further steps shortly.</Text>
-              </ViewSwitch>
-              <ViewSwitch  hide={!submitted}>
-                <Text style={styles.subTitle}>Success!</Text>
-                <Text style={styles.description}>Thank you for signing up. If your email adress is valid, you will receive a confirmation email with your temporary password shortly.</Text>
-              </ViewSwitch>
-
-            </View>
-
-            <ViewSwitch hide={submitted} style={styles.textInCont}>
-              <TextInput
-                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-                mode={'flat'}
-                underlineColor={'white'}
-                selectionColor={'white'}
-                label='Email (username)'
-                placeholder={'please enter a valid email address'}
-                value={username}
-                maxLength={55}
-                onChangeText={(username) => this.setState({username})}
-              />
-              <TextInput
-                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-                mode={'flat'}
-                underlineColor={'white'}
-                selectionColor={'white'}
-                label='Stand Name'
-                placeholder={'Your stand or business name'}
-                value={standName}
-                maxLength={17}
-                secureTextEntry
-                onChangeText={(standName) => this.setState({standName})}
-              />
+        <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
+          <View style={styles.headingCont}>
+            <ViewSwitch  hide={submitted}>
+              <Text style={styles.subTitle}>Register Your Account</Text>
+              <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will receive a confirmation email with further steps shortly.</Text>
             </ViewSwitch>
-
-            <Text style={styles.errorMesg}>{errorMessage}</Text>
-
-            <ViewSwitch hide={submitted} style={styles.signInCont}>
-              <Button 
-                style={styles.button} 
-                onPress={() => signingUp || submitted ? null : this._register()}>
-                <Text>SUBMIT</Text>
-                <ViewLoad hide={signingUp}>
-                  <AntDesign name="adduser" size={22} />
-                </ViewLoad>
-              </Button>
-              <Button 
-                style={styles.button} 
-                onPress={() => this.props.navigation.navigate('SignIn')}>
-                <Text>BACK</Text>
-                <AntDesign name="back" size={22} />
-              </Button>
+            <ViewSwitch  hide={!submitted}>
+              <Text style={styles.subTitle}>Success!</Text>
+              <Text style={styles.description}>Thank you for signing up. If your email adress is valid, you will receive a confirmation email with your temporary password shortly. Use your password to log-in and update your profile.</Text>
             </ViewSwitch>
-            <ViewSwitch hide={!submitted} style={styles.signInCont}>
-              <Button 
-                style={styles.button} 
-                onPress={() => {
-                  this.setState({submitted: false, signingUp: false})
-                  this.props.navigation.navigate('SignIn')
-                  }}>
-                <Text>BACK</Text>
-                <AntDesign name="back" size={22} />
-              </Button>
-            </ViewSwitch>
-
           </View>
-        </KeyboardAvoidingView>
+
+          <ViewSwitch hide={submitted} style={styles.textInCont}>
+            <TextInput
+              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+              mode={'flat'}
+              underlineColor={'white'}
+              selectionColor={'white'}
+              label='Email (username)'
+              //placeholder={'please enter a valid email address'}
+              value={username}
+              maxLength={55}
+              onChangeText={(username) => this.setState({username})}
+            />
+            <TextInput
+              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+              mode={'flat'}
+              underlineColor={'white'}
+              selectionColor={'white'}
+              label='Stand Name'
+              //placeholder={'Your stand or business name'}
+              value={standName}
+              maxLength={17}
+              onChangeText={(standName) => this.setState({standName})}
+            />
+          </ViewSwitch>
+          </KeyboardAvoidingView>
+
+          <View style={styles.buttonCont}>
+          <Text style={styles.errorMesg}>{errorMessage}</Text>
+
+          <ViewSwitch hide={submitted} style={styles.signInCont}>
+            <Button 
+              style={styles.button} 
+              onPress={() => signingUp || submitted ? null : this._register()}>
+              <Text>SUBMIT</Text>
+              <ViewLoad hide={signingUp}>
+                <AntDesign name="adduser" size={22} />
+              </ViewLoad>
+            </Button>
+            <Button 
+              style={styles.button} 
+              onPress={() => this.props.navigation.navigate('SignIn')}>
+              <Text>BACK</Text>
+              <AntDesign name="back" size={22} />
+            </Button>
+          </ViewSwitch>
+          <ViewSwitch hide={!submitted} style={styles.signInCont}>
+            <Button 
+              style={styles.button} 
+              onPress={() => {
+                this.setState({submitted: false, signingUp: false})
+                this.props.navigation.navigate('SignIn')
+                }}>
+              <Text>BACK</Text>
+              <AntDesign name="back" size={22} />
+            </Button>
+          </ViewSwitch>
+          </View>
+
+        </View>
+     
       </ImageBackground>
     )
   }
@@ -131,32 +133,28 @@ class SignUp extends React.Component {
   _register = async () => {
     this.setState({ signingUp: true, errorMessage: null })
     let { username, standName } = this.state
-
-    if(username.lenth < 3 ||  standName.lenth < 3) {
+    if(username.length < 4 ||  standName.length < 3) {
       systemAlert('Incomplete Info', 'Please complete both fields before submitting your profile.')
       this.setState({ signingUp: false  })
-    } else if (false) {
+      return
+    } else if (!validateEmail(username)) {
       systemAlert('Invalid Email', 'Please enter a valid email address.')
+      this.setState({ signingUp: false  })
+      return
     }
 
     let signUpPost = {
       userType: "Merchant",
       username: username,
-      standName: standName
+      standName: standName,
+      hostId: HostID
     }
-
     const response = await signUpMerchant(signUpPost, this.signal.token)
     if (response.code == 200) {
-      const res = await asSetProfile(response.data, AuthIn.username) 
-      if(res == false){
-        this.setState({
-          signingUp: false,
-          errorMessage: "Unable to save info to your device storage",
-        }) 
-        return
-      }
-      this.setState({ signingUp: false }) 
-      this.props.navigation.navigate('Main');
+      this.setState({
+        signingUp: false,
+        submitted: true
+      }) 
     } else {
       this.setState({
         errorMessage: response.data,
@@ -166,10 +164,6 @@ class SignUp extends React.Component {
 
     this.setState({signingUp: false})
   }
-
-  // _isLogedIn = async () => {
-  //   console.log("checking is logged in")
-  // }
 
   static navigationOptions = {
     title: 'SignUp',
@@ -186,21 +180,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.pViewBg,
     opacity: 0.99
   },
-  keybCont: {
-    width: '100%', 
-    height: '100%', 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center'
-  },
   subCont: {
     width: '90%', 
     height: '94%',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     backgroundColor: colors.pBlackTransp, 
     paddingHorizontal: '4%', 
     borderRadius: 5
+  },
+  keybCont: {
+    flex: 1,
+    width: '100%', 
+    flexDirection: 'column', 
+    justifyContent: 'flex-start', 
+    alignItems: 'center',
+    paddingBottom: 5
   },
   signInCont: {
     flex: 3, 
@@ -215,9 +210,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center'
   },
-  logoMain: {
-    color: colors.pWhite, 
-    marginVertical: 20
+  buttonCont: {
+    height: 135
   },
   title: {
     fontSize: isTablet ? 38 : 25, 
@@ -225,6 +219,7 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: isTablet ? 30 : 20, 
+    marginBottom: isTablet ? 18 : 12, 
     color: colors.pWhite
   },
   description: {
@@ -232,6 +227,7 @@ const styles = StyleSheet.create({
     color: colors.pWhite
   },
   textInCont: {
+    width: '100%',
     flex: 2, 
     flexDirection: 'column', 
     justifyContent: 'space-around'

@@ -6,9 +6,9 @@ import SignIn from '../screens/SignIn'
 import SignUp from '../screens/SignUp'
 
 export default createStackNavigator({
-  SignUp: SignUp,Main: MainTabNavigator,
   SignIn: SignIn,
-
+  SignUp: SignUp,
+  Main: MainTabNavigator,
   
 },
 {
