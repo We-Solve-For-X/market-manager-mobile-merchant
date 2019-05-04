@@ -1,7 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, FlatList, RefreshControl } from 'react-native'
-import { Button, Text, Icon } from '@shoutem/ui'
-import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios'
 //consts & comps
 import ErrorLine from "../components/common/ErrorLine"
@@ -9,9 +7,6 @@ import AttendanceCard from '../components/markets/AttendanceCard'
 import NoContent from "../components/common/NoContent"
 import Updater from "../components/common/Updater"
 import colors from '../constants/colors'
-import styleConsts from '../constants/styleConsts'
-import layout from '../constants/layout'
-import { HostID } from "../config/env"
 import { asGet } from "../services/asyncStorage/asApi"
 import { ProfileCnsts } from "../services/asyncStorage/asConsts"
 
@@ -47,20 +42,9 @@ export default class Attendances extends React.Component {
           refreshControl={ <RefreshControl refreshing={loading} onRefresh={() => this._fetchData()}/> }
         >
           <ErrorLine errorMessage={errorMessage}/>
-
-          {/* <Text>Attendances</Text>
-          <Button style={styles.crButton} 
-            onPress={async () => {
-              await this.setState({shouldRefresh: true})
-              this.props.navigation.navigate('AttendanceDetails')}}>
-            <Text>VIEW ATTENDANCE</Text>
-          </Button> */}
-
-
-
           <FlatList
             data={attendances}
-            //keyExtractor={(item) => item.spotSummary.spotId}
+            keyExtractor={(item) => item.attendanceId}
             renderItem={({item}) => this._renderAttendance(item)}
             scrollEnabled={false}
             //isLoading={loading}
@@ -106,10 +90,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.pViewBg,
     paddingHorizontal: 10,
-  },
-  crButton: {
-    marginVertical: 18, 
-    marginHorizontal: 45, 
-    ...styleConsts.buttonBorder
   }
 });

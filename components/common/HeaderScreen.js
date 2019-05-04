@@ -1,6 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
-import { NavigationBar } from "@shoutem/ui"
+import { View, StyleSheet } from 'react-native'
 import { Title } from "@shoutem/ui"
 //import Icon from '../icons/icons'
 //  Config

@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ImageBackground, KeyboardAvoidingView } from 'react-native'
 import imagesRef from '../assets/imagesRef'
 import { Button, } from "@shoutem/ui"
-import { Text, Title, Heading } from "@shoutem/ui"
-//import { TextInput } from "@shoutem/ui"
+import { Text } from "@shoutem/ui"
 import { systemAlert } from "../services/systemAlerts"
 import { TextInput } from "react-native-paper"
 import { connectStyle } from '@shoutem/theme'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import axios from 'axios'
 import ViewLoad from "../components/common/ViewLoad"
 import ViewSwitch from "../components/common/ViewSwitch"
@@ -16,9 +15,8 @@ import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
 import { HostID } from '../config/env'
-import { validateEmail } from "../services/validators";
+import { validateEmail } from "../services/validators"
 import { signUpMerchant } from "../networking/nm_sfx_auth"
-import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
 
 class SignUp extends React.Component {
@@ -58,11 +56,11 @@ class SignUp extends React.Component {
           <View style={styles.headingCont}>
             <ViewSwitch  hide={submitted}>
               <Text style={styles.subTitle}>Register Your Account</Text>
-              <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will receive a confirmation email with further steps shortly.</Text>
+              <Text style={styles.description}>Please enter a valid email address along with your stand/business name. You will shortly receive a confirmation email with further steps.</Text>
             </ViewSwitch>
             <ViewSwitch  hide={!submitted}>
               <Text style={styles.subTitle}>Success!</Text>
-              <Text style={styles.description}>Thank you for signing up. If your email adress is valid, you will receive a confirmation email with your temporary password shortly. Use your password to log-in and update your profile.</Text>
+              <Text style={styles.description}>Thank you for signing up. If your email address is valid, you will receive a confirmation email with your temporary password shortly. Use your password to log-in and update your profile.</Text>
             </ViewSwitch>
           </View>
 

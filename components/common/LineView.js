@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native'
-import { Text, TextInput } from '@shoutem/ui'
-import colors from '../../constants/colors';
+import { Text } from '@shoutem/ui'
+import colors from '../../constants/colors'
 
 const LineView = ({title, value}) => {
     return(

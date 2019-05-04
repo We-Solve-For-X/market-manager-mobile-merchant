@@ -3,6 +3,7 @@ const tintColor = '#2f95dc';
 export default {
   primary:   '#313131',
   secondary: '#999999',
+  secondaryLight: '#BBBBBB',
   pBlack: '#111111',
   pGrey: '#FAFAFA',
   pWhite: '#FFFFFF',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Title, Subtitle, Text, Icon } from '@shoutem/ui'
 import moment from 'moment'
 import colors from '../../constants/colors'

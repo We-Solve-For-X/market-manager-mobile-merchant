@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from '@shoutem/ui'
 import { isTablet } from "../../constants/platform"
 //  Config

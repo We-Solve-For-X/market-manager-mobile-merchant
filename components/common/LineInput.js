@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native'
 import { Text, TextInput } from '@shoutem/ui'
-import colors from '../../constants/colors';
+import colors from '../../constants/colors'
 
 
 const LineInput = ({title, value, onChange, placeholder, secureTextEntry, maxLength = 22}) => {

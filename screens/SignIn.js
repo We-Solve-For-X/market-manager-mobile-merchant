@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ImageBackground, KeyboardAvoidingView } from 'react-native'
 import imagesRef from '../assets/imagesRef'
 import { Button, } from "@shoutem/ui"
 import { Text, Title, Heading } from "@shoutem/ui"
@@ -13,6 +13,8 @@ import ViewLoad from "../components/common/ViewLoad"
 import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
+import { systemAlert } from "../services/systemAlerts"
+import { validateEmail } from "../services/validators";
 import { signinMerchant } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
@@ -23,8 +25,8 @@ class SignIn extends React.Component {
     this.state = {
       signingIn: false,
       errorMessage: null,
-      password: 'myword',
-      email: 'invia@granola.com'
+      password: '',
+      email: ''
     }
     this.signal = axios.CancelToken.source()
   }
@@ -51,7 +53,6 @@ class SignIn extends React.Component {
 
         <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
           
-            
             <View style={styles.headingCont}>
               <Text style={styles.title}>Market Manager</Text>
               <FontAwesome name="shopping-basket" size={50} style={styles.logoMain}/>
@@ -59,61 +60,71 @@ class SignIn extends React.Component {
             </View>
 
             <View style={styles.textInCont}>
-            <TextInput
-              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-              mode={'flat'}
-              underlineColor={'white'}
-              selectionColor={'white'}
-              label='Username'
-              value={email}
-              maxLength={55}
-              onChangeText={(email) => this.setState({email})}
-            />
-             <TextInput
-              theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
-              mode={'flat'}
-              underlineColor={'white'}
-              selectionColor={'white'}
-              label='Password'
-              value={password}
-              maxLength={17}
-              secureTextEntry
-              onChangeText={(password) => this.setState({password})}
-            />
+              <TextInput
+                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+                mode={'flat'}
+                underlineColor={'white'}
+                selectionColor={'white'}
+                label='Username'
+                value={email}
+                maxLength={55}
+                onChangeText={(email) => this.setState({email})}
+              />
+              <TextInput
+                theme={{ colors: { placeholder: 'white', text: 'white', primary: 'white',underlineColor:'transparent',background : 'transparent'}}}
+                mode={'flat'}
+                underlineColor={'white'}
+                selectionColor={'white'}
+                label='Password'
+                value={password}
+                maxLength={17}
+                secureTextEntry
+                onChangeText={(password) => this.setState({password})}
+              />
             </View>
             </KeyboardAvoidingView>
 
             <View style={styles.buttonCont}>      
-            <Text style={styles.errorMesg}>{errorMessage}</Text>
-            <View style={styles.signInCont}>
-              <Button 
-                style={styles.button} 
-                onPress={() => signingIn ? null : this._signInAsync()}>
-                <Text>LOG IN</Text>
-                <ViewLoad hide={signingIn}>
-                  <AntDesign name="login" size={22} />
-                </ViewLoad>
-              </Button>
-              <Button 
-                style={styles.buttonB} 
-                onPress={() => this.props.navigation.navigate('SignUp')}>
-                <Text>REGISTER</Text>
-                {/* <AntDesign name="adduser" size={22} /> */}
-              </Button>
-              </View>
-            
+              <Text style={styles.errorMesg}>{errorMessage}</Text>
+              <View style={styles.signInCont}>
+                <Button 
+                  style={styles.button} 
+                  onPress={() => signingIn ? null : this._signInAsync()}>
+                  <Text>LOG IN</Text>
+                  <ViewLoad hide={signingIn}>
+                    <AntDesign name="login" size={22} />
+                  </ViewLoad>
+                </Button>
+                <Button 
+                  style={styles.buttonB} 
+                  onPress={() => this.props.navigation.navigate('SignUp')}>
+                  <Text>REGISTER</Text>
+                  {/* <AntDesign name="adduser" size={22} /> */}
+                </Button>
+                </View>
             </View>
+
           </View>
-        
       </ImageBackground>
     )
   }
 
   _signInAsync = async () => {
     this.setState({ signingIn: true, errorMessage: null })
-    let AuthIn = {userType: 'Merchant', username: this.state.email, password: this.state.password}
-    
+    let { email, password } = this.state
+    if(email.length < 2 ||  password.length < 2) {
+      systemAlert('Incomplete Info', 'Please complete both fields before submitting your profile.')
+      this.setState({ signingIn: false  })
+      return
+    } else if (!validateEmail(email)) {
+      systemAlert('Invalid Email', 'Please enter a valid email address.')
+      this.setState({ signingIn: false  })
+      return
+    }
+
+    let AuthIn = {userType: 'Merchant', username: email, password: password}
     const response = await signinMerchant(AuthIn, this.signal.token) 
+
     if (response.code == 200) {
       const res = await asSetProfile(response.data, AuthIn.username) 
       if(res == false){

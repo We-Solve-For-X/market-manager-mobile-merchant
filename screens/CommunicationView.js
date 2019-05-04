@@ -4,11 +4,7 @@ import axios from 'axios'
 import ButtonFloat from '../components/common/ButtonFloat'
 import { TextInput, Button, Text } from '@shoutem/ui'
 import colors from '../constants/colors'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import LineView from "../components/common/LineView"
-import ViewLoad from "../components/common/ViewLoad"
-import { deleteMessage } from "../networking/nm_sfx_communication"
-import { systemAlert } from "../services/systemAlerts"
 
 export default class CommunicationView extends React.Component {
   constructor(props){
@@ -28,7 +24,7 @@ export default class CommunicationView extends React.Component {
   }
 
   render() {
-    const { deleting } = this.state
+    //const { deleting } = this.state
     const { navigation } = this.props
     const message = navigation.getParam('message', {none: 'none'});
     const { topic, text, fromName, description, id } = message
@@ -79,17 +75,17 @@ export default class CommunicationView extends React.Component {
     })
   }
 
-  _deleteMessage = async (id = '') => {
-    this.setState({deleting: true})
-    const response = await deleteMessage(id, this.signal.token)
-    if (response.code == 200) {
-      this.setState({deleting: false})
-      this.props.navigation.goBack()
-    } else {
-      this.setState({deleting: false})
-      systemAlert('Error', 'Unable to delete this message. Please inform support.')
-    }
-  }
+  // _deleteMessage = async (id = '') => {
+  //   this.setState({deleting: true})
+  //   const response = await deleteMessage(id, this.signal.token)
+  //   if (response.code == 200) {
+  //     this.setState({deleting: false})
+  //     this.props.navigation.goBack()
+  //   } else {
+  //     this.setState({deleting: false})
+  //     systemAlert('Error', 'Unable to delete this message. Please inform support.')
+  //   }
+  // }
 
   static navigationOptions = {
     title: 'Links',
@@ -118,12 +114,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', 
     width: '100%'
   },
-  lineContainer: {
-    width: '100%', 
-    flexDirection: 'row', 
-    justifyContent: 'flex-start', 
-    alignItems: 'center'
-  },
   buttonContainer: {
     width: '100%', 
     flexDirection: 'row', 
@@ -143,9 +133,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent', 
     height: 42, 
     paddingVertical: 0
-  },
-  titleBox: {
-    width: 50,
-    marginLeft: 12
   }
 });

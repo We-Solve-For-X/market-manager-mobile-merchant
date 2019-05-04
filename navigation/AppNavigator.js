@@ -1,15 +1,14 @@
 import React from 'react';
 import { Easing, Animated } from 'react-native'
-import { createStackNavigator } from 'react-navigation';
+import { createSwitchNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import SignIn from '../screens/SignIn'
 import SignUp from '../screens/SignUp'
 
-export default createStackNavigator({
+export default createSwitchNavigator({
   SignIn: SignIn,
-  SignUp: SignUp,
   Main: MainTabNavigator,
-  
+  SignUp: SignUp,
 },
 {
   headerMode: 'none',

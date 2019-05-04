@@ -56,12 +56,3 @@ export function dellete(path, token) {
     cancelToken: token
   })
 }
-
-export function getOc(path, token) {
-  console.log('url', `${OPENCAGE_URL}/${path}`)
-  return axios.get(`${OPENCAGE_URL}/${path}`, {
-    method: 'GET',
-    timeout: 2000,
-    cancelToken: token
-  })
-}

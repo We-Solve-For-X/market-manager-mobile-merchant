@@ -7,7 +7,6 @@ import { MaterialCommunityIcons, AntDesign, MaterialIcons } from '@expo/vector-i
 import Home from '../screens/Home'
 import Attendances from '../screens/Attendances'
 import AttendanceDetails from '../screens/AttendanceDetails'
-import Merchants from '../screens/Merchants'
 import Communication from '../screens/Communication'
 import CommunicationView from '../screens/CommunicationView'
 import HeaderScreen from '../components/common/HeaderScreen'
@@ -32,16 +31,6 @@ AttendancesStack.navigationOptions = {
   )
 }
 
-const MerchantsStack = createStackNavigator({
-  Merchants: Merchants,
-})
-MerchantsStack.navigationOptions = {
-  tabBarLabel: 'Merchants',
-  tabBarIcon: ({ tintColor }) => (
-    <AntDesign name="user" size={22} color={colors.pWhite}/>
-  )
-}
-
 const CommunicationStack = createStackNavigator({
   Communication: Communication,
 })
@@ -53,7 +42,7 @@ CommunicationStack.navigationOptions = {
 }
 
 const PrimaryNavConfig = {
-  initialRouteName: 'AttendancesStack',
+  initialRouteName: 'HomeStack',
   lazy: 'true',
   tabBarOptions:{
     showIcon: true,
@@ -98,8 +87,6 @@ const MainStack = createStackNavigator({
       headerBackTitle: null
     }),
   },
-  //MerchantsDetails: MerchantsDetails,
-  //MarketDetails: MarketDetails,
   AttendanceDetails: {
     screen: AttendanceDetails,
     navigationOptions: () => ({
@@ -108,7 +95,6 @@ const MainStack = createStackNavigator({
       headerBackTitle: null
     }),
   },
-  //CommunicationView: CommunicationView,
   CommunicationView: {
     screen: CommunicationView,
     navigationOptions: () => ({

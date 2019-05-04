@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet } from "react-native"
 import ViewSwitch from "../../components/common/ViewSwitch"
 import { Text } from '@shoutem/ui'
-import colors from "../../constants/colors";
+import colors from "../../constants/colors"
 
 const ErrorLine = ({errorMessage, style}) => { 
     return (

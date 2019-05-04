@@ -40,31 +40,20 @@ export default class Communication extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props
     const { messages, loading, shouldRefresh, errorMessage } = this.state
     return (
       <View style={styles.container}>
-        <Updater shouldRefresh={shouldRefresh} onRefresh={() => this._fetchData()} doneRefresh={() => this.setState({shouldRefresh: false})} />
+        <Updater shouldRefresh={shouldRefresh} onRefresh={() => this._fetchData(true)} doneRefresh={() => this.setState({shouldRefresh: false})} />
         <ScrollView 
-          refreshControl={ <RefreshControl refreshing={loading} nRefresh={() => this._fetchData()} />} 
+          refreshControl={ <RefreshControl refreshing={loading} onRefresh={() => this._fetchData(true)} />} 
         >
           <ErrorLine errorMessage={errorMessage}/>
-          {/* <Button 
-            style={styles.addButton} 
-            onPress={ 
-              async () => { await this.setState({shouldRefresh: true})
-              this.props.navigation.navigate('CommunicationView')}}
-          >
-            <Text>VIEW</Text>
-            <MaterialCommunityIcons name="email-plus-outline" size={22} />
-          </Button> */}
 
           <FlatList
             data={messages}
-            //keyExtractor={(item) => item.spotSummary.spotId}
+            keyExtractor={(item) => item.id}
             renderItem={({item}) => this._renderMessage(item)}
             scrollEnabled={false}
-            // isLoading={false}
             ListEmptyComponent={<NoContent refresh={true}/>}
           />
 
@@ -83,8 +72,8 @@ export default class Communication extends React.Component {
       )
   }
 
-  _fetchData = async () => {
-    this.setState({ loading: true })
+  _fetchData = async (silent = false) => {
+    if(silent){ null } else { await this.setState({ loading: true }) }
     let merchantId = this.state.merchId
     const response = await merchantInbox(merchantId, HostID, this.signal.token)
     if (response.code == 200) {
@@ -113,9 +102,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: colors.pViewBg
   },
-  addButton: {
-    marginVertical: 18, 
-    marginHorizontal: 45, 
-    ...styleConsts.buttonBorder
-  }
 });

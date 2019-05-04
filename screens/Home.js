@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl, KeyboardAvoidingView } from 'react-native'
+import { View, StyleSheet, ScrollView, RefreshControl, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import { Text, Heading, Subtitle, Title, TextInput, Button } from '@shoutem/ui'
 import { isTablet } from "../constants/platform"
 import axios from 'axios'
@@ -15,6 +15,7 @@ import { ProfileCnsts } from "../services/asyncStorage/asConsts"
 import { systemAlert } from "../services/systemAlerts"
 import LineInput from "../components/common/LineInput"
 import LineView from "../components/common/LineView"
+import Updater from "../components/common/Updater"
 //API
 import { merchOverview, updateMerchant } from "../networking/nm_sfx_home"
 import { changePassword } from "../networking/nm_sfx_auth"
@@ -42,8 +43,9 @@ export default class Home extends React.Component {
       repSurname: null,
       repEmail: null,
       repCell: null,
-
+      //signout
       loadSignOut: false,
+      shouldRefresh: false,
 
       loadingPatch: false,
       patchErrorMessage: null,
@@ -71,16 +73,18 @@ export default class Home extends React.Component {
 
   render() {
     const { host, profile, messagesTxt, paymentsTxt } = this.state
-    const { loadSignOut, loadingPatch, patchErrorMessage, loading, errorMessage } = this.state
+    const { loadSignOut, loadingPatch, patchErrorMessage, loading, errorMessage, shouldRefresh } = this.state
     //password
     const { userName, cPassw, nPassw, loadingPw, pwErrorMessage } = this.state
     //updater fields
     const { name, legalName, description, category, repName, repSurname, repEmail, repCell } = this.state
-
     return (
     <View style={styles.container}>
+    <Updater shouldRefresh={shouldRefresh} onRefresh={() => this._updateScreen()} doneRefresh={() => this.setState({shouldRefresh: false, loading: false})} /> 
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={120}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+       contentContainerStyle={styles.scrollContainer}>
+       {loading ? <ActivityIndicator/> : null}
         <ErrorLine errorMessage={errorMessage}/>
 
         <ViewSwitch style={styles.dataCardTop} hide={!profile.repName}>
@@ -144,10 +148,10 @@ export default class Home extends React.Component {
           <LineView title={'Stand ID'}    value={profile.standId ? profile.standId : '(no stand-ID assigned)'}/>
         </ViewSwitch>
 
-        <ViewSwitch style={styles.dataCard} hide={!profile.name}>
+        <ViewSwitch style={styles.dataCardDark} hide={!profile.name}>
           <Heading style={styleConsts.headingOne}>Merchant Details</Heading>
           <Subtitle>Your Business and User Profile Information:</Subtitle>
-          <View style={styles.divider}/>
+          {/* <View style={styles.divider}/> */}
           <LineInput title={'Name'}        value={name} onChange={(name) => this.setState({name})}/>
           <View style={styles.divider}/>
           <LineInput title={'Legal Name'}  value={legalName} maxLength={100} onChange={(legalName) => this.setState({legalName})}/>
@@ -163,7 +167,7 @@ export default class Home extends React.Component {
           <LineInput title={'Email'}       value={repEmail} maxLength={80} onChange={(repEmail) => this.setState({repEmail})}/>
           <View style={styles.divider}/>
           <LineInput title={'Cell'}        value={repCell} maxLength={12} onChange={(repCell) => this.setState({repCell})}/>
-          <View style={styles.divider}/>
+          {/* <View style={styles.divider}/> */}
           <ViewSwitch hide={pwErrorMessage == null}>
               <Text style={styles.errorText}>{patchErrorMessage}</Text>
           </ViewSwitch>
@@ -179,16 +183,16 @@ export default class Home extends React.Component {
           </View> 
         </ViewSwitch>
 
-        <View style={styles.dataCard}>
+        <ViewSwitch style={styles.dataCardDark} hide={!profile.name}>
           <Heading style={styleConsts.headingOne}>Sign-In Credentials</Heading>
           <Subtitle>Change User Credentials:</Subtitle>
-          <View style={styles.divider}/>
+          {/* <View style={styles.divider}/> */}
           <LineView title={'Username'}      value={userName} maxLength={50}/>
           <View style={styles.divider}/>
           <LineInput title={'Password'}     value={cPassw} onChange={(cPassw) => this.setState({cPassw})} secureTextEntry={true} placeholder={'...current password'}/>
           <View style={styles.divider}/>
           <LineInput title={'New Password'} value={nPassw} onChange={(nPassw) => this.setState({nPassw})} secureTextEntry={true} placeholder={'...new password'}/>
-          <View style={styles.divider}/>
+          {/* <View style={styles.divider}/> */}
           <ViewSwitch hide={pwErrorMessage == null}>
               <Text style={styles.errorText}>{pwErrorMessage}</Text>
           </ViewSwitch>
@@ -202,9 +206,9 @@ export default class Home extends React.Component {
             </ViewLoad>
           </Button>   
           </View> 
-        </View>
+        </ViewSwitch>
 
-        <View style={styles.dataCard}>
+        <View style={styles.dataCardDark}>
           <View style={styles.buttonContainer}>
           <Button 
             style={styles.button} 
@@ -289,8 +293,15 @@ export default class Home extends React.Component {
   _signOutAsync = async () => {
     await this.setState({ loadSignOut: true })
     await asClearProfile()
-    await this.setState({ loadSignOut: false })
+    await this.setState({ loadSignOut: false, shouldRefresh: true })
     this.props.navigation.navigate('SignIn')
+  }
+
+  _updateScreen = async () => {
+    let merchId = await asGet(ProfileCnsts.id)
+    let userName = await asGet(ProfileCnsts.username)
+    await this.setState({merchId, userName})
+    await this._fetchData(true)
   }
 
   _fetchData = async (silent = false) => {
@@ -354,12 +365,20 @@ const styles = StyleSheet.create({
   topSubTxt: {
     color: colors.pYellow
   },
-  dataCard: { 
+  dataCard: {
     margin: 10, 
     padding: 5, 
     borderRadius: 5, 
     width: '100%', 
     backgroundColor: colors.pWhite, 
+    ...styleConsts.viewShadow
+  },
+  dataCardDark: { 
+    margin: 10, 
+    padding: 5, 
+    borderRadius: 5, 
+    width: '100%', 
+    backgroundColor: colors.secondaryLight, 
     ...styleConsts.viewShadow
   },
   scrollContainer: {
@@ -368,12 +387,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 10
-  },
-  lineContainer: {
-    width: '100%', 
-    flexDirection: 'row', 
-    justifyContent: 'flex-start', 
-    alignItems: 'center'
   },
   buttonContainer: {
     flexDirection: 'row', 
@@ -401,21 +414,4 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     width: '100%'
   },
-  titleBox: {
-    width: 120,
-    marginLeft: 5
-  },
-  lineViewText: {
-    flex: 1,
-    paddingHorizontal: 5, 
-    paddingVertical: 10, 
-    justifyContent: 'flex-start'
-  },
-  lineInputText: {
-    flex: 1,
-    paddingHorizontal: 5, 
-    paddingVertical: 10, 
-    justifyContent: 'flex-start', 
-    height: 40
-  }
 });
