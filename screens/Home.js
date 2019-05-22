@@ -237,7 +237,7 @@ export default class Home extends React.Component {
       return
     }
     else if(name.length < 4 || description.length < 4 || repEmail.length < 5 || repName.length == 0) {
-      systemAlert('Password Error', 'All the fields are not populated, unable to update')
+      systemAlert('Content Required', 'All the fields are not populated, unable to update')
       this.setState({loadingPatch: false})
       return
     }

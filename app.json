@@ -26,13 +26,7 @@
     "ios": {
       "bundleIdentifier": "com.solveforx.marketmanager.merchant",
       "supportsTablet": true,
-      "buildNumber": "1.0.0",
-      "infoPlist": {
-        "UIBackgroundModes": [
-          "location",
-          "fetch"
-        ]
-      }
+      "buildNumber": "1.0.1"
     },
     "android": {
       "package": "com.solveforx.marketmanager.merchant",

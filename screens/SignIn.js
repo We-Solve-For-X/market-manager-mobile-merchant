@@ -14,7 +14,7 @@ import colors from '../constants/colors'
 import layout from '../constants/layout'
 //API
 import { systemAlert } from "../services/systemAlerts"
-import { validateEmail } from "../services/validators";
+import { validateEmail } from "../services/validators"
 import { signinMerchant } from "../networking/nm_sfx_auth"
 import { asSetProfile } from "../services/asyncStorage/asApi"
 import { isTablet } from "../constants/platform"
@@ -51,7 +51,7 @@ class SignIn extends React.Component {
       > 
       <View style={styles.subCont}>
 
-        <KeyboardAvoidingView behavior="padding" style={styles.keybCont} >
+        <KeyboardAvoidingView behavior="padding" style={styles.keybCont} keyboardVerticalOffset={20}>
           
             <View style={styles.headingCont}>
               <Text style={styles.title}>Market Manager</Text>

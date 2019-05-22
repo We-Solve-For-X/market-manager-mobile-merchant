@@ -60,7 +60,7 @@ class SignUp extends React.Component {
             </ViewSwitch>
             <ViewSwitch  hide={!submitted}>
               <Text style={styles.subTitle}>Success!</Text>
-              <Text style={styles.description}>Thank you for signing up. If your email address is valid, you will receive a confirmation email with your temporary password shortly. Use your password to log-in and update your profile.</Text>
+              <Text style={styles.description}>{`Signup successful. You will shortly receive a confirmation email with an one-time-pin (OTP) delivered to ${username}. Use this OTP to log in to your account.`}</Text>
             </ViewSwitch>
           </View>
 
